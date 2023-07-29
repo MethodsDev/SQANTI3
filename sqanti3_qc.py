@@ -29,6 +29,10 @@ from rt_switching import rts
 from indels_annot import calc_indels_from_sam
 from short_reads import *
 
+cDNA_cupcake_sequence_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "cDNA_Cupcake/sequence")
+sys.path.insert(0, cDNA_cupcake_sequence_dir)
+
+
 try:
     from Bio.Seq import Seq
     from Bio import SeqIO

@@ -1,3 +1,14 @@
+
+Various mods post forking:
+- included cDNA_Cupcake as submodule
+- added Makefile for building/installing both SQANTI3 and cDNA_Cupcake under a python env SQ3
+- added cDNA_Cupcake/sequence to PYTHONPATH at runtime.
+- minor updates to cDNA_Cupcake for Py3 compat
+
+
+
+
+
 ![SQANTI3 logo](https://github.com/FJPardoPalacios/public_figures/blob/master/sq3-logo.png)
 
 # SQANTI3

@@ -3872,7 +3872,7 @@ t2.RTS.list = vector("list", length(class.files))
 t3.NMD.list = vector("list", length(class.files))
 t3.Cov.list = vector("list", length(class.files))
 t3.Cage.list = vector("list", length(class.files))
-t3.PolA.list = vector("list", length(class.files))
+t3.PolyA.list = vector("list", length(class.files))
 
 # t3.list = vector("list", length(class.files))
 t3.a.Cov.list = vector("list", length(class.files))
@@ -3884,7 +3884,7 @@ n_t3.SJ.list = vector("integer", length(class.files))
 n_t3.RTS.list = vector("integer", length(class.files))
 
 t3.list = vector("list", length(class.files))
-t3.data.sets.list = vector("logical", length(class.files))
+t3.data.sets.list = vector("list", length(class.files))
 
 p.list = vector("list", length(class.files))
 ### Bad quality control attributes
@@ -3893,7 +3893,7 @@ p.list = vector("list", length(class.files))
 #p28.RTS
 for (i in seq_along(class.files)) {
     if (n.data.junction.list[[i]] > 0) { ### was nrow(data.junction)
-        # t3.data.sets.list[[i]] <- list()
+        t3.data.sets.list[[i]] <- list()
         t3.list[[i]] <- list()
         # (Fran) ToDo: USE COVERAGE DATA LATER
         # for FSM, ISM, NIC, and NNC, plot the percentage of RTS and non-canonical junction
@@ -3969,48 +3969,47 @@ rm(p.list)
 
 # some more variable setup
 for (i in seq_along(class.files)) {
-        if (!all(is.na(x.list[[i]]$within_CAGE_peak))){
-            x.list[[i]][which(!x.list[[i]]$within_CAGE_peak),"Coverage_Cage"] <- "No Coverage CAGE"
-            x.list[[i]][which(x.list[[i]]$within_CAGE_peak),"Coverage_Cage"] <- "Has Coverage CAGE"
-            t1.Cage <- group_by(x.list[[i]], structural_category, Coverage_Cage) %>% dplyr::summarise(count=dplyr::n(), .groups = 'drop')
-            t3.Cage.list[[i]] <- merge(t1.Cage, t2.RTS.list[[i]], by="structural_category")
-            rm(t1.Cage)
-            t3.Cage.list[[i]]$perc <- t3.Cage.list[[i]]$count.x / t3.Cage.list[[i]]$count.y * 100
-            t3.Cage.list[[i]] <- subset(t3.Cage.list[[i]], Coverage_Cage=='Has Coverage CAGE');
-            t3.Cage.list[[i]]$Var <- t3.Cage.list[[i]]$Coverage_Cage
-            t3.data.sets.list[[i]][[length(t3.data.sets.list[[i]]) + 1]] <- !all(is.na(data.class.list[[i]]$dist_to_cage_peak))
-            t3.list[[i]][[length(t3.list[[i]]) + 1]] <- t3.Cage.list[[i]]
-
-
-        if (!all(is.na(data.class.list[[i]]$polyA_motif))) {
-            x.list[[i]][which(is.na(x.list[[i]]$polyA_motif)),"Coverage_PolyA"] <- "No Coverage PolyA"
-            x.list[[i]][which(!is.na(x.list[[i]]$polyA_motif)),"Coverage_PolyA"] <- "Has Coverage PolyA"
-            t1.PolyA <- group_by(x.list[[i]], structural_category, Coverage_PolyA) %>% dplyr::summarise(count=dplyr::n(), .groups = 'drop')
-            t3.PolyA.list[[i]] <- merge(t1.PolyA, t2.RTS.list[[i]], by="structural_category")
-            rm(t1.PolyA)
-            t3.PolyA.list[[i]]$perc <- t3.PolyA.list[[i]]$count.x / t3.PolyA.list[[i]]$count.y * 100
-            t3.PolyA.list[[i]] <- subset(t3.PolyA.list[[i]], Coverage_PolyA=='Has Coverage PolyA');
-            t3.PolyA.list[[i]]$Var <- t3.PolyA.list[[i]]$Coverage_PolyA
-            t3.data.sets.list[[i]][[length(t3.data.sets.list[[i]]) + 1]] = !all(is.na(data.class.list[[i]]$polyA_motif))
-            t3.list[[i]][[length(t3.list[[i]]) + 1]] = t3.PolyA.list[[i]]
-
-        }
-        
-        x.list[[i]][which(x.list[[i]]$diff_to_gene_TSS<=50),"Annotation"] <- "Annotated"
-        x.list[[i]][which(x.list[[i]]$diff_to_gene_TSS>50),"Annotation"] <- "Not annotated"
-        t1.annot <- group_by(x.list[[i]], structural_category, Annotation) %>% dplyr::summarise(count=dplyr::n(), .groups = 'drop')
-
-        x.min_cov.list[[i]] = all(is.na(x.list[[i]]$min_cov))
-        x.predicted_NMD.list[[i]] = all(is.na(x.list[[i]]$predicted_NMD))
-        rm(x.list[[i]])
-
-        t3.annot.list[[i]] <- merge(t1.annot, t2.RTS.list[[i]], by="structural_category")
-        rm(t1.annot)
-        t3.annot.list[[i]]$perc <- t3.annot.list[[i]]$count.x / t3.annot.list[[i]]$count.y * 100
-        t3.annot.list[[i]] <- subset(t3.annot.list[[i]], Annotation=='Annotated');
-        t3.annot.list[[i]]$Var = t3.annot.list[[i]]$Annotation
+    if (!all(is.na(x.list[[i]]$within_CAGE_peak))) {
+        x.list[[i]][which(!x.list[[i]]$within_CAGE_peak),"Coverage_Cage"] <- "No Coverage CAGE"
+        x.list[[i]][which(x.list[[i]]$within_CAGE_peak),"Coverage_Cage"] <- "Has Coverage CAGE"
+        t1.Cage <- group_by(x.list[[i]], structural_category, Coverage_Cage) %>% dplyr::summarise(count=dplyr::n(), .groups = 'drop')
+        t3.Cage.list[[i]] <- merge(t1.Cage, t2.RTS.list[[i]], by="structural_category")
+        rm(t1.Cage)
+        t3.Cage.list[[i]]$perc <- t3.Cage.list[[i]]$count.x / t3.Cage.list[[i]]$count.y * 100
+        t3.Cage.list[[i]] <- subset(t3.Cage.list[[i]], Coverage_Cage=='Has Coverage CAGE');
+        t3.Cage.list[[i]]$Var <- t3.Cage.list[[i]]$Coverage_Cage
+        t3.data.sets.list[[i]][[length(t3.data.sets.list[[i]]) + 1]] <- !all(is.na(data.class.list[[i]]$dist_to_cage_peak))
+        t3.list[[i]][[length(t3.list[[i]]) + 1]] <- t3.Cage.list[[i]]
     }
+
+    if (!all(is.na(data.class.list[[i]]$polyA_motif))) {
+        x.list[[i]][which(is.na(x.list[[i]]$polyA_motif)),"Coverage_PolyA"] <- "No Coverage PolyA"
+        x.list[[i]][which(!is.na(x.list[[i]]$polyA_motif)),"Coverage_PolyA"] <- "Has Coverage PolyA"
+        t1.PolyA <- group_by(x.list[[i]], structural_category, Coverage_PolyA) %>% dplyr::summarise(count=dplyr::n(), .groups = 'drop')
+        t3.PolyA.list[[i]] <- merge(t1.PolyA, t2.RTS.list[[i]], by="structural_category")
+        rm(t1.PolyA)
+        t3.PolyA.list[[i]]$perc <- t3.PolyA.list[[i]]$count.x / t3.PolyA.list[[i]]$count.y * 100
+        t3.PolyA.list[[i]] <- subset(t3.PolyA.list[[i]], Coverage_PolyA=='Has Coverage PolyA');
+        t3.PolyA.list[[i]]$Var <- t3.PolyA.list[[i]]$Coverage_PolyA
+        t3.data.sets.list[[i]][[length(t3.data.sets.list[[i]]) + 1]] = !all(is.na(data.class.list[[i]]$polyA_motif))
+        t3.list[[i]][[length(t3.list[[i]]) + 1]] = t3.PolyA.list[[i]]
+
+    }
+    
+    x.list[[i]][which(x.list[[i]]$diff_to_gene_TSS<=50),"Annotation"] <- "Annotated"
+    x.list[[i]][which(x.list[[i]]$diff_to_gene_TSS>50),"Annotation"] <- "Not annotated"
+    t1.annot <- group_by(x.list[[i]], structural_category, Annotation) %>% dplyr::summarise(count=dplyr::n(), .groups = 'drop')
+
+    x.min_cov.list[[i]] = all(is.na(x.list[[i]]$min_cov))
+    x.predicted_NMD.list[[i]] = all(is.na(x.list[[i]]$predicted_NMD))
+
+    t3.annot.list[[i]] <- merge(t1.annot, t2.RTS.list[[i]], by="structural_category")
+    rm(t1.annot)
+    t3.annot.list[[i]]$perc <- t3.annot.list[[i]]$count.x / t3.annot.list[[i]]$count.y * 100
+    t3.annot.list[[i]] <- subset(t3.annot.list[[i]], Annotation=='Annotated');
+    t3.annot.list[[i]]$Var = t3.annot.list[[i]]$Annotation
 }
+
 
 
 
@@ -4126,7 +4125,7 @@ if (sum(n_t3.SJ.list) > 0 & sum(n_t3.RTS.list) > 0) {
     for (i in seq_along(class.files)) {
         if (n.data.junction.list[[i]] > 0) { ### was nrow(data.junction)
            if (n_t3.SJ.list[[i]] > 0 & n_t3.RTS.list[[i]] > 0 & !x.min_cov.list[[i]] & x.predicted_NMD.list[[i]]) {
-                t3 <- rbind(t3.RTS.list[[i]][,c(1,5,6)], t3.SJ[,c(1,5,6)], t3.Cov.list[[i]][,c(1,5,6)])
+                t3 <- rbind(t3.RTS.list[[i]][,c(1,5,6)], t3.SJ.list[[i]][,c(1,5,6)], t3.Cov.list[[i]][,c(1,5,6)])
                 p.list[[i]] <- ggplot(data=t3, aes(x=structural_category, y=perc, fill= Var)) +
                                geom_bar(position = position_dodge(), stat="identity", width = 0.7,  size=0.3, color="black") +
                                scale_fill_manual(values = myPalette[9:11]) +
@@ -4139,7 +4138,7 @@ if (sum(n_t3.SJ.list) > 0 & sum(n_t3.RTS.list) > 0) {
                                theme(legend.title = element_blank())
                 page_title = textGrob("Summary Features of Bad Quality", gp=gpar(fontface="italic", fontsize=17))
             } else if (n_t3.SJ.list[[i]] > 0 & n_t3.RTS.list[[i]] > 0 & x.min_cov.list[[i]] & x.predicted_NMD.list[[i]]) {
-                t3 = rbind(t3.RTS.list[[i]][,c(1,5,6)], t3.SJ[,c(1,5,6)])
+                t3 = rbind(t3.RTS.list[[i]][,c(1,5,6)], t3.SJ.list[[i]][,c(1,5,6)])
                 p.list[[i]] <- ggplot(data=t3, aes(x=structural_category, y=perc, fill= Var)) +
                                geom_bar(position = position_dodge(), stat="identity", width = 0.7,  size=0.3, color="black") +
                                scale_fill_manual(values = myPalette[c(9,11)]) +
@@ -4321,7 +4320,7 @@ if (!all(is.na(data.class.list[[i]]$min_cov))) {
 # p28.a
 p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
-    t3.aa <-  rbind(t3.annot.list[[i]][,c("structural_category", "perc", "Var")], t3.a.SJ[,c(1,5,6)])
+    t3.aa <-  rbind(t3.annot.list[[i]][,c("structural_category", "perc", "Var")], t3.a.SJ.list[[i]][,c(1,5,6)])
 
     for(j in 1:length(t3.list[[i]])) {
         c = data.frame(t3.list[[i]][[j]])

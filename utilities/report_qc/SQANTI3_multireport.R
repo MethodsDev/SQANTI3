@@ -2111,88 +2111,134 @@ p21.stitles.FSM = list(textGrob("Distance to annotated Transcription Termination
                        textGrob("Distance to annotated Transcription Termination Site (TTS)\nFSM Alternative 3'5'End", gp=gpar(fontface="italic", fontsize=17)),
                        textGrob("Distance to annotated Transcription Termination Site (TTS)\nFSM Alternative 5'End", gp=gpar(fontface="italic", fontsize=17)),
                        textGrob("Distance to annotated Transcription Termination Site (TTS)\nFSM Reference Match", gp=gpar(fontface="italic", fontsize=17)))
-p.list = vector("list", length(p21.stitles.FSM))
-p.list2 = vector("list", length(p21.stitles.FSM))
+# p.list = vector("list", length(p21.stitles.FSM))
+# p.list2 = vector("list", length(p21.stitles.FSM))
+# for (j in seq_along(p21.stitles.FSM)) {
+#     p.list[[j]] = vector("list", length(class.files))
+#     p.list2[[j]] = vector("list", length(class.files))
+# }
+# for (i in seq_along(class.files)) {
+#     if (nrow(data.FSM.list[[i]]) > 0) {
+#         if (!all(is.na(data.FSM.list[[i]]$polyA_motif))) {
+#             for(j in 1:length(subcategories.FSM.list[[i]])) {
+#                 c <- data.frame(subcategories.FSM.list[[i]][[j]])
+#                 if (!(dim(c))[1]==0 & !all(is.na(c$polyA_motif))) {
+#                     diff_max <- max(max(abs(c$diff_to_TSS)), max(abs(c$diff_to_TTS)));
+#                     diff_breaks <- c(-(diff_max+1), seq(-1000, 1000, by = 100), (diff_max+1));
+#                     c$diffTTSCat = cut(-(c$diff_to_TTS), breaks = diff_breaks);
+#                     max_height <- max(table(c$diffTTSCat));
+#                     max_height <- (max_height %/% 10+1) * 10;
+#                     #p.list[[j]][[i]] <- ggplot(data=c, aes(x=diffTTSCat)) +
+#                     #                    geom_bar(fill=myPalette[4], color="black", size=0.3, aes( alpha=eval(parse(text = alpha_TTS.list[[i]])))) +
+#                     #                    scale_y_continuous(expand = c(0,0), limits = c(0,max_height))+
+#                     #                    mytheme + labs(alpha = alpha_TTS_labs.list[[i]]) +
+#                     #                    scale_x_discrete(drop=F, labels=breaks_labels) +
+#                     #                    ylab("Transcripts, count")+
+#                     #                    xlab("Distance to Annotated Transcription Termination Site (TTS), bp")+
+#                     #                    labs(title=sample.names[[i]],
+#                     #                         subtitle="Negative values indicate upstream of annotated termination site\n\n") +
+#                     #                    theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+#                     #                    theme(legend.justification=c(1,1), legend.position=c(1,1))
+#                     #p.list2[[j]][[i]] <- ggplot(data=c, aes(x=diffTTSCat)) +
+#                     #                     geom_bar(aes(alpha=eval(parse(text = alpha_TTS.list[[i]])), y = (..count..)/sum(..count..)), fill=myPalette[4], color="black", size=0.3)+
+#                     #                     scale_y_continuous(breaks=c(0.0,0.25,0.50,0.75,1),
+#                     #                                        labels=c("0","25","50","75","100"), expand=c(0,0)) +
+#                     #                     scale_x_discrete(drop=F, labels=breaks_labels) +
+#                     #                     mytheme + labs(alpha = alpha_TTS_labs.list[[i]]) +
+#                     #                     ylab("Transcripts, %")+
+#                     #                     xlab("Distance to Annotated Transcription Termination Site (TTS), bp")+
+#                     #                     labs(title=sample.names[[i]],
+#                     #                          subtitle="Negative values indicate upstream of annotated termination site\n\n") +
+#                     #                     theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+#                     #                     theme(legend.justification=c(1,1), legend.position=c(1,1))
+#                     p.list[[j]][[i]] <- ggplot(data=c, aes(x=diffTTSCat)) +
+#                                         geom_bar(fill=myPalette[4], color="black", size=0.3, aes( alpha=polyA_motif_found)) +
+#                                         scale_y_continuous(expand = c(0,0), limits = c(0,max_height))+
+#                                         mytheme + labs(alpha = alpha_TTS_labs.list[[i]]) +
+#                                         scale_x_discrete(drop=F, labels=breaks_labels) +
+#                                         ylab("Transcripts, count")+
+#                                         xlab("Distance to Annotated Transcription Termination Site (TTS), bp")+
+#                                         labs(title=sample.names[[i]],
+#                                              subtitle="Negative values indicate upstream of annotated termination site\n\n") +
+#                                         theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+#                                         theme(legend.justification=c(1,1), legend.position=c(1,1))
+#                     p.list2[[j]][[i]] <- ggplot(data=c, aes(x=diffTTSCat)) +
+#                                          geom_bar(aes(alpha=polyA_motif_found, y = (..count..)/sum(..count..)), fill=myPalette[4], color="black", size=0.3)+
+#                                          scale_y_continuous(breaks=c(0.0,0.25,0.50,0.75,1),
+#                                                             labels=c("0","25","50","75","100"), expand=c(0,0)) +
+#                                          scale_x_discrete(drop=F, labels=breaks_labels) +
+#                                          mytheme + labs(alpha = alpha_TTS_labs.list[[i]]) +
+#                                          ylab("Transcripts, %")+
+#                                          xlab("Distance to Annotated Transcription Termination Site (TTS), bp")+
+#                                          labs(title=sample.names[[i]],
+#                                               subtitle="Negative values indicate upstream of annotated termination site\n\n") +
+#                                          theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+#                                          theme(legend.justification=c(1,1), legend.position=c(1,1))
+#                 }
+#             }
+#         }
+#     }
+# }
+# if (!all(sapply(unlist(p.list), is.null))) {
+#     for (j in seq_along(p21.stitles.FSM)) {
+#         organize_in_grid_with_title(p21.stitles.FSM[[j]], p.list[[j]])
+#         organize_in_grid_with_title(p21.stitles.FSM[[j]], p.list2[[j]])
+#     }
+# }
+# rm(p.list)
+# rm(p.list2)
+
+
+
+
 for (j in seq_along(p21.stitles.FSM)) {
-    p.list[[j]] = vector("list", length(class.files))
-    p.list2[[j]] = vector("list", length(class.files))
-}
-for (i in seq_along(class.files)) {
-    if (nrow(data.FSM.list[[i]]) > 0) {
-        if (!all(is.na(data.FSM.list[[i]]$polyA_motif))) {
-            for(j in 1:length(subcategories.FSM.list[[i]])) {
-                c <- data.frame(subcategories.FSM.list[[i]][[j]])
-                if (!(dim(c))[1]==0 & !all(is.na(c$polyA_motif))) {
-                    diff_max <- max(max(abs(c$diff_to_TSS)), max(abs(c$diff_to_TTS)));
-                    diff_breaks <- c(-(diff_max+1), seq(-1000, 1000, by = 100), (diff_max+1));
-                    c$diffTTSCat = cut(-(c$diff_to_TTS), breaks = diff_breaks);
-                    max_height <- max(table(c$diffTTSCat));
-                    max_height <- (max_height %/% 10+1) * 10;
-                    #p.list[[j]][[i]] <- ggplot(data=c, aes(x=diffTTSCat)) +
-                    #                    geom_bar(fill=myPalette[4], color="black", size=0.3, aes( alpha=eval(parse(text = alpha_TTS.list[[i]])))) +
-                    #                    scale_y_continuous(expand = c(0,0), limits = c(0,max_height))+
-                    #                    mytheme + labs(alpha = alpha_TTS_labs.list[[i]]) +
-                    #                    scale_x_discrete(drop=F, labels=breaks_labels) +
-                    #                    ylab("Transcripts, count")+
-                    #                    xlab("Distance to Annotated Transcription Termination Site (TTS), bp")+
-                    #                    labs(title=sample.names[[i]],
-                    #                         subtitle="Negative values indicate upstream of annotated termination site\n\n") +
-                    #                    theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
-                    #                    theme(legend.justification=c(1,1), legend.position=c(1,1))
-                    #p.list2[[j]][[i]] <- ggplot(data=c, aes(x=diffTTSCat)) +
-                    #                     geom_bar(aes(alpha=eval(parse(text = alpha_TTS.list[[i]])), y = (..count..)/sum(..count..)), fill=myPalette[4], color="black", size=0.3)+
-                    #                     scale_y_continuous(breaks=c(0.0,0.25,0.50,0.75,1),
-                    #                                        labels=c("0","25","50","75","100"), expand=c(0,0)) +
-                    #                     scale_x_discrete(drop=F, labels=breaks_labels) +
-                    #                     mytheme + labs(alpha = alpha_TTS_labs.list[[i]]) +
-                    #                     ylab("Transcripts, %")+
-                    #                     xlab("Distance to Annotated Transcription Termination Site (TTS), bp")+
-                    #                     labs(title=sample.names[[i]],
-                    #                          subtitle="Negative values indicate upstream of annotated termination site\n\n") +
-                    #                     theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
-                    #                     theme(legend.justification=c(1,1), legend.position=c(1,1))
-                    p.list[[j]][[i]] <- ggplot(data=c, aes(x=diffTTSCat)) +
-                                        geom_bar(fill=myPalette[4], color="black", size=0.3, aes( alpha=polyA_motif_found)) +
-                                        scale_y_continuous(expand = c(0,0), limits = c(0,max_height))+
-                                        mytheme + labs(alpha = alpha_TTS_labs.list[[i]]) +
-                                        scale_x_discrete(drop=F, labels=breaks_labels) +
-                                        ylab("Transcripts, count")+
-                                        xlab("Distance to Annotated Transcription Termination Site (TTS), bp")+
-                                        labs(title=sample.names[[i]],
-                                             subtitle="Negative values indicate upstream of annotated termination site\n\n") +
-                                        theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
-                                        theme(legend.justification=c(1,1), legend.position=c(1,1))
-                    p.list2[[j]][[i]] <- ggplot(data=c, aes(x=diffTTSCat)) +
-                                         geom_bar(aes(alpha=polyA_motif_found, y = (..count..)/sum(..count..)), fill=myPalette[4], color="black", size=0.3)+
-                                         scale_y_continuous(breaks=c(0.0,0.25,0.50,0.75,1),
-                                                            labels=c("0","25","50","75","100"), expand=c(0,0)) +
-                                         scale_x_discrete(drop=F, labels=breaks_labels) +
-                                         mytheme + labs(alpha = alpha_TTS_labs.list[[i]]) +
-                                         ylab("Transcripts, %")+
-                                         xlab("Distance to Annotated Transcription Termination Site (TTS), bp")+
-                                         labs(title=sample.names[[i]],
-                                              subtitle="Negative values indicate upstream of annotated termination site\n\n") +
-                                         theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
-                                         theme(legend.justification=c(1,1), legend.position=c(1,1))
-                }
+    p.list = vector("list", length(class.files))
+    p.list2 = vector("list", length(class.files))
+
+    for (i in seq_along(class.files)) {
+        if ((nrow(data.FSM.list[[i]]) > 0) & (!all(is.na(data.FSM.list[[i]]$polyA_motif)))) {
+            c <- data.frame(subcategories.FSM.list[[i]][[j]])
+            if (!(dim(c))[1]==0 & !all(is.na(c$polyA_motif))) {
+                diff_max <- max(max(abs(c$diff_to_TSS)), max(abs(c$diff_to_TTS)));
+                diff_breaks <- c(-(diff_max+1), seq(-1000, 1000, by = 100), (diff_max+1));
+                c$diffTTSCat = cut(-(c$diff_to_TTS), breaks = diff_breaks);
+                max_height <- max(table(c$diffTTSCat));
+                max_height <- (max_height %/% 10+1) * 10;
+                p.list[[i]] <- ggplot(data=c, aes(x=diffTTSCat)) +
+                                    geom_bar(fill=myPalette[4], color="black", size=0.3, aes( alpha=polyA_motif_found)) +
+                                    scale_y_continuous(expand = c(0,0), limits = c(0,max_height))+
+                                    mytheme + labs(alpha = alpha_TTS_labs.list[[i]]) +
+                                    scale_x_discrete(drop=F, labels=breaks_labels) +
+                                    ylab("Transcripts, count")+
+                                    xlab("Distance to Annotated Transcription Termination Site (TTS), bp")+
+                                    labs(title=sample.names[[i]],
+                                         subtitle="Negative values indicate upstream of annotated termination site\n\n") +
+                                    theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+                                    theme(legend.justification=c(1,1), legend.position=c(1,1))
+                p.list2[[i]] <- ggplot(data=c, aes(x=diffTTSCat)) +
+                                     geom_bar(aes(alpha=polyA_motif_found, y = (..count..)/sum(..count..)), fill=myPalette[4], color="black", size=0.3)+
+                                     scale_y_continuous(breaks=c(0.0,0.25,0.50,0.75,1),
+                                                        labels=c("0","25","50","75","100"), expand=c(0,0)) +
+                                     scale_x_discrete(drop=F, labels=breaks_labels) +
+                                     mytheme + labs(alpha = alpha_TTS_labs.list[[i]]) +
+                                     ylab("Transcripts, %")+
+                                     xlab("Distance to Annotated Transcription Termination Site (TTS), bp")+
+                                     labs(title=sample.names[[i]],
+                                          subtitle="Negative values indicate upstream of annotated termination site\n\n") +
+                                     theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+                                     theme(legend.justification=c(1,1), legend.position=c(1,1))
+
             }
         }
     }
-}
-if (!all(sapply(unlist(p.list), is.null))) {
-    for (j in seq_along(p21.stitles.FSM)) {
-        organize_in_grid_with_title(p21.stitles.FSM[[j]], p.list[[j]])
-        organize_in_grid_with_title(p21.stitles.FSM[[j]], p.list2[[j]])
+    if (!all(sapply(p.list, is.null))) {
+        organize_in_grid_with_title(p21.stitles.FSM[[j]], p.list)
+        organize_in_grid_with_title(p21.stitles.FSM[[j]], p.list2)
     }
+    rm(p.list)
+    rm(p.list2)
+    gc()
 }
-rm(p.list)
-rm(p.list2)
-
-
-
-
-
-
 
 
 
@@ -2202,15 +2248,67 @@ p21.stitles.ISM = list(textGrob("Distance to Annotated Polyadenylation Site for 
                        textGrob("Distance to Annotated Polyadenylation Site for ISM\nInternal Fragment", gp=gpar(fontface="italic", fontsize=17)),
                        textGrob("Distance to Annotated Polyadenylation Site for ISM\nA5' Fragment", gp=gpar(fontface="italic", fontsize=17)),
                        textGrob("Distance to Annotated Polyadenylation Site for ISM\nIntron Retention", gp=gpar(fontface="italic", fontsize=17)))
-p.list = vector("list", length(p21.stitles.ISM))
-p.list2 = vector("list", length(p21.stitles.ISM))
+# p.list = vector("list", length(p21.stitles.ISM))
+# p.list2 = vector("list", length(p21.stitles.ISM))
+# for (j in seq_along(p21.stitles.ISM)) {
+#     p.list[[j]] = vector("list", length(class.files))
+#     p.list2[[j]] = vector("list", length(class.files))
+# }
+# for (i in seq_along(class.files)) {
+#     if (nrow(data.ISM.list[[i]]) > 0) {
+#         for (j in 1:length(subcategories.ISM.list[[i]])) {
+#             c <- data.frame(subcategories.ISM.list[[i]][[j]])
+#             if (!(dim(c))[1]==0 & !all(is.na(c$polyA_motif))) {
+#                 diff_max <- max(max(abs(c$diff_to_TSS)), max(abs(c$diff_to_TTS)));
+#                 diff_breaks <- c(-(diff_max+1), seq(-5000, 5000, by = 500), diff_max+1);
+#                 c$diffTTSCat = cut(-(c$diff_to_TTS), breaks = diff_breaks);
+#                 max_height <-  max(table(c$diffTTSCat));
+#                 max_height <- (max_height %/% 10+1) * 10;
+#                 p.list[[j]][[i]] <- ggplot(data=c, aes(x=diffTTSCat)) +
+#                                     geom_bar(fill=myPalette[4], color="black", size=0.3, aes( alpha= !is.na(polyA_motif))) +
+#                                     scale_y_continuous(expand = c(0,0), limits = c(0,max_height))+
+#                                     scale_x_discrete(drop=F, labels=breaks_labels) +
+#                                     mytheme + labs(alpha = "polyA motif found") +
+#                                     ylab("Transcripts, count") +
+#                                     xlab("Distance to annotated polyadenylation site, bp") +
+#                                     labs(title=sample.names[[i]],
+#                                          subtitle="Negative values indicate upstream of annotated polyA site\n\n") +
+#                                     theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+#                                     theme(legend.justification=c(1,1), legend.position=c(1,1))
+#                 p.list2[[j]][[i]] <- ggplot(data=c, aes(x=diffTTSCat)) +
+#                                      geom_bar(aes(alpha= !is.na(polyA_motif), y = (..count..)/sum(..count..)), fill=myPalette[4], color="black", size=0.3) +
+#                                      scale_y_continuous(breaks=c(0.0,0.25,0.50,0.75,1),
+#                                                         labels=c("0","25","50","75","100"), expand = c(0,0)) +
+#                                      scale_x_discrete(drop=F, labels=breaks_labels) +
+#                                      mytheme + labs(alpha = "polyA motif found") +
+#                                      ylab("Transcripts, %") +
+#                                      xlab("Distance to annotated polyadenylation site, bp") +
+#                                      labs(title=sample.names[[i]],
+#                                           subtitle="Negative values indicate upstream of annotated polyA site\n\n") +
+#                                      theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+#                                      theme(legend.justification=c(1,1), legend.position=c(1,1))
+#             }
+#         }
+#     }
+# }
+# if (!all(sapply(unlist(p.list), is.null))) {
+#     for (j in seq_along(p21.stitles.ISM)) {
+#         organize_in_grid_with_title(p21.stitles.ISM[[j]], p.list[[j]])
+#         organize_in_grid_with_title(p21.stitles.ISM[[j]], p.list2[[j]])
+#     }
+# }
+# rm(p.list)
+# rm(p.list2)
+
+
+
+
 for (j in seq_along(p21.stitles.ISM)) {
-    p.list[[j]] = vector("list", length(class.files))
-    p.list2[[j]] = vector("list", length(class.files))
-}
-for (i in seq_along(class.files)) {
-    if (nrow(data.ISM.list[[i]]) > 0) {
-        for (j in 1:length(subcategories.ISM.list[[i]])) {
+    p.list = vector("list", length(class.files))
+    p.list2 = vector("list", length(class.files))
+
+    for (i in seq_along(class.files)) {
+        if (nrow(data.ISM.list[[i]]) > 0) {
             c <- data.frame(subcategories.ISM.list[[i]][[j]])
             if (!(dim(c))[1]==0 & !all(is.na(c$polyA_motif))) {
                 diff_max <- max(max(abs(c$diff_to_TSS)), max(abs(c$diff_to_TTS)));
@@ -2218,8 +2316,8 @@ for (i in seq_along(class.files)) {
                 c$diffTTSCat = cut(-(c$diff_to_TTS), breaks = diff_breaks);
                 max_height <-  max(table(c$diffTTSCat));
                 max_height <- (max_height %/% 10+1) * 10;
-                p.list[[j]][[i]] <- ggplot(data=c, aes(x=diffTTSCat)) +
-                                    geom_bar(fill=myPalette[4], color="black", size=0.3, aes( alpha= !is.na(polyA_motif))) +
+                p.list[[i]] <- ggplot(data=c, aes(x=diffTTSCat)) +
+                                    geom_bar(fill=myPalette[4], color="black", size=0.3, aes( alpha= polyA_motif_found)) +
                                     scale_y_continuous(expand = c(0,0), limits = c(0,max_height))+
                                     scale_x_discrete(drop=F, labels=breaks_labels) +
                                     mytheme + labs(alpha = "polyA motif found") +
@@ -2229,8 +2327,8 @@ for (i in seq_along(class.files)) {
                                          subtitle="Negative values indicate upstream of annotated polyA site\n\n") +
                                     theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
                                     theme(legend.justification=c(1,1), legend.position=c(1,1))
-                p.list2[[j]][[i]] <- ggplot(data=c, aes(x=diffTTSCat)) +
-                                     geom_bar(aes(alpha= !is.na(polyA_motif), y = (..count..)/sum(..count..)), fill=myPalette[4], color="black", size=0.3) +
+                p.list2[[i]] <- ggplot(data=c, aes(x=diffTTSCat)) +
+                                     geom_bar(aes(alpha= polyA_motif_found, y = (..count..)/sum(..count..)), fill=myPalette[4], color="black", size=0.3) +
                                      scale_y_continuous(breaks=c(0.0,0.25,0.50,0.75,1),
                                                         labels=c("0","25","50","75","100"), expand = c(0,0)) +
                                      scale_x_discrete(drop=F, labels=breaks_labels) +
@@ -2244,15 +2342,14 @@ for (i in seq_along(class.files)) {
             }
         }
     }
-}
-if (!all(sapply(unlist(p.list), is.null))) {
-    for (j in seq_along(p21.stitles.ISM)) {
-        organize_in_grid_with_title(p21.stitles.ISM[[j]], p.list[[j]])
-        organize_in_grid_with_title(p21.stitles.ISM[[j]], p.list2[[j]])
+    if (!all(sapply(p.list, is.null))) {
+        organize_in_grid_with_title(p21.stitles.ISM[[j]], p.list)
+        organize_in_grid_with_title(p21.stitles.ISM[[j]], p.list2)
     }
+    rm(p.list)
+    rm(p.list2)
+    gc()
 }
-rm(p.list)
-rm(p.list2)
 
 
 
@@ -2262,16 +2359,69 @@ p22.stitles.FSM = list(textGrob("Distance to Annotated Transcription Start Site\
                        textGrob("Distance to Annotated Transcription Start Site\nFSM Alternative 3'5' End", gp=gpar(fontface="italic", fontsize=17)),
                        textGrob("Distance to Annotated Transcription Start Site\nFSM Alternative 5' End", gp=gpar(fontface="italic", fontsize=17)),
                        textGrob("Distance to Annotated Transcription Start Site\nFSM Reference Match", gp=gpar(fontface="italic", fontsize=17)))
-p.list = vector("list", length(p22.stitles.FSM))
-p.list2 = vector("list", length(p22.stitles.FSM))
-for (j in seq_along(p22.stitles.FSM)) {
-    p.list[[j]] = vector("list", length(class.files))
-    p.list2[[j]] = vector("list", length(class.files))
-}
+# p.list = vector("list", length(p22.stitles.FSM))
+# p.list2 = vector("list", length(p22.stitles.FSM))
+# for (j in seq_along(p22.stitles.FSM)) {
+#     p.list[[j]] = vector("list", length(class.files))
+#     p.list2[[j]] = vector("list", length(class.files))
+# }
+# 
+# for (i in seq_along(class.files)) {
+#     if (nrow(data.FSM.list[[i]]) > 0 && !all(is.na(data.FSM.list[[i]]$within_cage_peak))) {
+#         for(j in 1:length(subcategories.FSM.list[[i]])) {
+#             c <- data.frame(subcategories.FSM.list[[i]][[j]])
+#             if (!(dim(c))[1]==0 & !all(is.na(c$within_CAGE_peak))) {
+#                 diff_max <- max(max(abs(c$diff_to_TSS)), max(abs(c$diff_to_TTS)));
+#                 diff_breaks <- c(-(diff_max+1), seq(-1000, 1000, by = 100), (diff_max+1));
+#                 c$diffTTSCat = cut(-(c$diff_to_TTS), breaks = diff_breaks);
+#                 c$diffTSSCat = cut(-(c$diff_to_TSS), breaks = diff_breaks);
+#                 max_height <- max(table(c$diffTSSCat));
+#                 max_height <- (max_height %/% 10+1) * 10;
+#                 p.list[[j]][[i]] <- ggplot(data=c, aes(x=diffTSSCat)) +
+#                                     geom_bar(fill=myPalette[6], color="black", size=0.3, aes(alpha=eval(parse(text = alpha_TSS.list[[i]])))) +
+#                                     scale_y_continuous(expand = c(0,0), limits = c(0,max_height))+
+#                                     scale_x_discrete(drop=F, labels=breaks_labels) +
+#                                     mytheme + labs(alpha=alpha_TSS_labs.list[[i]]) +
+#                                     ylab("Transcripts, count")+
+#                                     xlab("Distance to annotated Transcription Start Site (TSS), bp")+
+#                                     labs(title=sample.names[[i]],
+#                                          subtitle="Negative values indicate downstream of annotated TSS\n\n") +
+#                                     theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+#                                     theme(legend.justification=c(1,1), legend.position=c(1,1))
+#                 p.list2[[j]][[i]] <- ggplot(data=c, aes(x=diffTSSCat)) +
+#                                      geom_bar(aes(alpha=eval(parse(text = alpha_TSS.list[[i]])), y = (..count..)/sum(..count..)), fill=myPalette[6], color="black", size=0.3)+
+#                                      scale_y_continuous(breaks=c(0.0,0.25,0.50,0.75,1),
+#                                                                              labels=c("0","25","50","75","100"), expand = c(0,0)) +
+#                                      scale_x_discrete(drop=F, labels=breaks_labels) +
+#                                      mytheme + labs(alpha=alpha_TSS_labs.list[[i]]) +
+#                                      ylab("Transcripts, %")+
+#                                      xlab("Distance to annotated Transcription Start Site (TSS), bp")+
+#                                      labs(title=sample.names[[i]],
+#                                           subtitle="Negative values indicate downstream of annotated TSS\n\n") +
+#                                      theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+#                                      theme(legend.justification=c(1,1), legend.position=c(1,1))
+#             }
+#         }
+#     }
+# }
+# if (!all(sapply(unlist(p.list), is.null))) {
+#     for (j in seq_along(p22.stitles.FSM)) {
+#         organize_in_grid_with_title(p22.stitles.FSM[[j]], p.list[[j]])
+#         organize_in_grid_with_title(p22.stitles.FSM[[j]], p.list2[[j]])
+#     }
+# }
+# rm(p.list)
+# rm(p.list2)
 
-for (i in seq_along(class.files)) {
-    if (nrow(data.FSM.list[[i]]) > 0 && !all(is.na(data.FSM.list[[i]]$within_cage_peak))) {
-        for(j in 1:length(subcategories.FSM.list[[i]])) {
+
+
+
+for (j in seq_along(p22.stitles.FSM)) {
+    p.list = vector("list", length(class.files))
+    p.list2 = vector("list", length(class.files))
+
+    for (i in seq_along(class.files)) {
+        if (nrow(data.FSM.list[[i]]) > 0 && !all(is.na(data.FSM.list[[i]]$within_cage_peak))) {
             c <- data.frame(subcategories.FSM.list[[i]][[j]])
             if (!(dim(c))[1]==0 & !all(is.na(c$within_CAGE_peak))) {
                 diff_max <- max(max(abs(c$diff_to_TSS)), max(abs(c$diff_to_TTS)));
@@ -2280,41 +2430,42 @@ for (i in seq_along(class.files)) {
                 c$diffTSSCat = cut(-(c$diff_to_TSS), breaks = diff_breaks);
                 max_height <- max(table(c$diffTSSCat));
                 max_height <- (max_height %/% 10+1) * 10;
-                p.list[[j]][[i]] <- ggplot(data=c, aes(x=diffTSSCat)) +
-                                    geom_bar(fill=myPalette[6], color="black", size=0.3, aes(alpha=eval(parse(text = alpha_TSS.list[[i]])))) +
-                                    scale_y_continuous(expand = c(0,0), limits = c(0,max_height))+
-                                    scale_x_discrete(drop=F, labels=breaks_labels) +
-                                    mytheme + labs(alpha=alpha_TSS_labs.list[[i]]) +
-                                    ylab("Transcripts, count")+
-                                    xlab("Distance to annotated Transcription Start Site (TSS), bp")+
-                                    labs(title=sample.names[[i]],
-                                         subtitle="Negative values indicate downstream of annotated TSS\n\n") +
-                                    theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
-                                    theme(legend.justification=c(1,1), legend.position=c(1,1))
-                p.list2[[j]][[i]] <- ggplot(data=c, aes(x=diffTSSCat)) +
-                                     geom_bar(aes(alpha=eval(parse(text = alpha_TSS.list[[i]])), y = (..count..)/sum(..count..)), fill=myPalette[6], color="black", size=0.3)+
-                                     scale_y_continuous(breaks=c(0.0,0.25,0.50,0.75,1),
-                                                                             labels=c("0","25","50","75","100"), expand = c(0,0)) +
-                                     scale_x_discrete(drop=F, labels=breaks_labels) +
-                                     mytheme + labs(alpha=alpha_TSS_labs.list[[i]]) +
-                                     ylab("Transcripts, %")+
-                                     xlab("Distance to annotated Transcription Start Site (TSS), bp")+
-                                     labs(title=sample.names[[i]],
-                                          subtitle="Negative values indicate downstream of annotated TSS\n\n") +
-                                     theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
-                                     theme(legend.justification=c(1,1), legend.position=c(1,1))
+                p.list[[i]] <- ggplot(data=c, aes(x=diffTSSCat)) +
+                               geom_bar(fill=myPalette[6], color="black", size=0.3, aes(alpha="within_CAGE_peak")) +
+                               scale_y_continuous(expand = c(0,0), limits = c(0,max_height))+
+                               scale_x_discrete(drop=F, labels=breaks_labels) +
+                               mytheme + labs(alpha=alpha_TSS_labs.list[[i]]) +
+                               ylab("Transcripts, count")+
+                               xlab("Distance to annotated Transcription Start Site (TSS), bp")+
+                               labs(title=sample.names[[i]],
+                                    subtitle="Negative values indicate downstream of annotated TSS\n\n") +
+                               theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+                               theme(legend.justification=c(1,1), legend.position=c(1,1))
+                p.list2[[i]] <- ggplot(data=c, aes(x=diffTSSCat)) +
+                                geom_bar(aes(alpha="within_CAGE_peak", y = (..count..)/sum(..count..)), fill=myPalette[6], color="black", size=0.3)+
+                                scale_y_continuous(breaks=c(0.0,0.25,0.50,0.75,1),
+                                                                        labels=c("0","25","50","75","100"), expand = c(0,0)) +
+                                scale_x_discrete(drop=F, labels=breaks_labels) +
+                                mytheme + labs(alpha=alpha_TSS_labs.list[[i]]) +
+                                ylab("Transcripts, %")+
+                                xlab("Distance to annotated Transcription Start Site (TSS), bp")+
+                                labs(title=sample.names[[i]],
+                                     subtitle="Negative values indicate downstream of annotated TSS\n\n") +
+                                theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+                                theme(legend.justification=c(1,1), legend.position=c(1,1))
+
             }
         }
     }
-}
-if (!all(sapply(unlist(p.list), is.null))) {
-    for (j in seq_along(p22.stitles.FSM)) {
-        organize_in_grid_with_title(p22.stitles.FSM[[j]], p.list[[j]])
-        organize_in_grid_with_title(p22.stitles.FSM[[j]], p.list2[[j]])
+    if (!all(sapply(p.list, is.null))) {
+        organize_in_grid_with_title(p22.stitles.FSM[[j]], p.list)
+        organize_in_grid_with_title(p22.stitles.FSM[[j]], p.list2)
     }
+    rm(p.list)
+    rm(p.list2)
+    gc()
 }
-rm(p.list)
-rm(p.list2)
+
 
 
 
@@ -2325,15 +2476,68 @@ p22.stitles.ISM = list(textGrob("Distance to Annotated Transcription Start Site 
                        textGrob("Distance to Annotated Transcription Start Site for ISM\nInternal Fragment" , gp=gpar(fontface="italic", fontsize=17)),
                        textGrob("Distance to Annotated Transcription Start Site for ISM\nA5' Fragment" , gp=gpar(fontface="italic", fontsize=17)),
                        textGrob("Distance to Annotated Transcription Start Site for ISM\nIntron Retention" , gp=gpar(fontface="italic", fontsize=17)))
-p.list = vector("list", length(p22.stitles.ISM))
-p.list2 = vector("list", length(p22.stitles.ISM))
+# p.list = vector("list", length(p22.stitles.ISM))
+# p.list2 = vector("list", length(p22.stitles.ISM))
+# for (j in seq_along(p22.stitles.ISM)) {
+#     p.list[[j]] = vector("list", length(class.files))
+#     p.list2[[j]] = vector("list", length(class.files))
+# }
+# for (i in seq_along(class.files)) {
+#     if (nrow(data.ISM.list[[i]]) > 0 && !all(is.na(data.FSM.list[[i]]$within_cage_peak))) {
+#         for(j in 1:length(subcategories.ISM.list[[i]])) {
+#             c <- data.frame(subcategories.ISM.list[[i]][[j]])
+#             if (!(dim(c))[1]==0 & !all(is.na(c$within_CAGE_peak))) {
+#                 diff_max <- max(max(abs(c$diff_to_TSS)), max(abs(c$diff_to_TTS)));
+#                 diff_breaks <- c(-(diff_max+1), seq(-5000, 5000, by = 500), diff_max+1)
+#                 c$diffTTSCat = cut(-(c$diff_to_TTS), breaks = diff_breaks);
+#                 c$diffTSSCat = cut(-(c$diff_to_TSS), breaks = diff_breaks);
+#                 max_height <- max(max(table(c$diffTSSCat)), max(table(c$diffTTSCat)));
+#                 max_height <- (max_height %/% 10+1) * 10;
+#                 p.list[[j]][[i]] <- ggplot(data=c, aes(x=diffTSSCat)) +
+#                                     geom_bar(fill=myPalette[6], color="black", size=0.3, aes( alpha= within_CAGE_peak)) +
+#                                     scale_y_continuous(expand = c(0,0), limits = c(0, max_height)) +
+#                                     scale_x_discrete(drop=F, labels=breaks_labels) +
+#                                     mytheme + labs(alpha = "TSS within a CAGE peak") +
+#                                     ylab("Transcripts, count") +
+#                                     xlab("Distance to annotated transcription start site, bp") +
+#                                     labs(title=sample.names[[i]],
+#                                          subtitle="Negative values indicate downstream of annotated TSS\n\n") +
+#                                     theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+#                                     theme(legend.justification=c(1,1), legend.position=c(1,1))
+#                 p.list2[[j]][[i]] <- ggplot(data=c, aes(x=diffTSSCat)) +
+#                                      geom_bar(aes( alpha= within_CAGE_peak, y = (..count..)/sum(..count..)), fill=myPalette[6], color="black", size=0.3) +
+#                                      scale_y_continuous(breaks=c(0.0,0.25,0.50,0.75,1),
+#                                                         labels=c("0","25","50","75","100"), expand = c(0,0)) +
+#                                      scale_x_discrete(drop=F, labels=breaks_labels) +
+#                                      mytheme + labs(alpha = "TSS within a CAGE peak") +
+#                                      ylab("Transcripts, %") +
+#                                      xlab("Distance to annotated transcription start site, bp") +
+#                                      labs(title=sample.names[[i]],
+#                                           subtitle="Negative values indicate downstream of annotated TSS\n\n") +
+#                                      theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+#                                      theme(legend.justification=c(1,1), legend.position=c(1,1))
+#             }
+#         }
+#     }
+# }
+# if (!all(sapply(unlist(p.list), is.null))) {
+#     for (j in seq_along(p22.stitles.ISM)) {
+#         organize_in_grid_with_title(p22.stitles.ISM[[j]], p.list[[j]])
+#         organize_in_grid_with_title(p22.stitles.ISM[[j]], p.list2[[j]])
+#     }
+# }
+# rm(p.list)
+# rm(p.list2)
+
+
+
+
 for (j in seq_along(p22.stitles.ISM)) {
-    p.list[[j]] = vector("list", length(class.files))
-    p.list2[[j]] = vector("list", length(class.files))
-}
-for (i in seq_along(class.files)) {
-    if (nrow(data.ISM.list[[i]]) > 0 && !all(is.na(data.FSM.list[[i]]$within_cage_peak))) {
-        for(j in 1:length(subcategories.ISM.list[[i]])) {
+    p.list = vector("list", length(class.files))
+    p.list2 = vector("list", length(class.files))
+
+    for (i in seq_along(class.files)) {
+        if (nrow(data.ISM.list[[i]]) > 0 && !all(is.na(data.ISM.list[[i]]$within_cage_peak))) {
             c <- data.frame(subcategories.ISM.list[[i]][[j]])
             if (!(dim(c))[1]==0 & !all(is.na(c$within_CAGE_peak))) {
                 diff_max <- max(max(abs(c$diff_to_TSS)), max(abs(c$diff_to_TTS)));
@@ -2342,41 +2546,44 @@ for (i in seq_along(class.files)) {
                 c$diffTSSCat = cut(-(c$diff_to_TSS), breaks = diff_breaks);
                 max_height <- max(max(table(c$diffTSSCat)), max(table(c$diffTTSCat)));
                 max_height <- (max_height %/% 10+1) * 10;
-                p.list[[j]][[i]] <- ggplot(data=c, aes(x=diffTSSCat)) +
-                                    geom_bar(fill=myPalette[6], color="black", size=0.3, aes( alpha= within_CAGE_peak)) +
-                                    scale_y_continuous(expand = c(0,0), limits = c(0, max_height)) +
-                                    scale_x_discrete(drop=F, labels=breaks_labels) +
-                                    mytheme + labs(alpha = "TSS within a CAGE peak") +
-                                    ylab("Transcripts, count") +
-                                    xlab("Distance to annotated transcription start site, bp") +
-                                    labs(title=sample.names[[i]],
-                                         subtitle="Negative values indicate downstream of annotated TSS\n\n") +
-                                    theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
-                                    theme(legend.justification=c(1,1), legend.position=c(1,1))
-                p.list2[[j]][[i]] <- ggplot(data=c, aes(x=diffTSSCat)) +
-                                     geom_bar(aes( alpha= within_CAGE_peak, y = (..count..)/sum(..count..)), fill=myPalette[6], color="black", size=0.3) +
-                                     scale_y_continuous(breaks=c(0.0,0.25,0.50,0.75,1),
-                                                        labels=c("0","25","50","75","100"), expand = c(0,0)) +
-                                     scale_x_discrete(drop=F, labels=breaks_labels) +
-                                     mytheme + labs(alpha = "TSS within a CAGE peak") +
-                                     ylab("Transcripts, %") +
-                                     xlab("Distance to annotated transcription start site, bp") +
-                                     labs(title=sample.names[[i]],
-                                          subtitle="Negative values indicate downstream of annotated TSS\n\n") +
-                                     theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
-                                     theme(legend.justification=c(1,1), legend.position=c(1,1))
+                p.list[[i]] <- ggplot(data=c, aes(x=diffTSSCat)) +
+                               geom_bar(fill=myPalette[6], color="black", size=0.3, aes( alpha= within_CAGE_peak)) +
+                               scale_y_continuous(expand = c(0,0), limits = c(0, max_height)) +
+                               scale_x_discrete(drop=F, labels=breaks_labels) +
+                               mytheme + labs(alpha = "TSS within a CAGE peak") +
+                               ylab("Transcripts, count") +
+                               xlab("Distance to annotated transcription start site, bp") +
+                               labs(title=sample.names[[i]],
+                                    subtitle="Negative values indicate downstream of annotated TSS\n\n") +
+                               theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+                               theme(legend.justification=c(1,1), legend.position=c(1,1))
+                p.list2[[i]] <- ggplot(data=c, aes(x=diffTSSCat)) +
+                                geom_bar(aes( alpha= within_CAGE_peak, y = (..count..)/sum(..count..)), fill=myPalette[6], color="black", size=0.3) +
+                                scale_y_continuous(breaks=c(0.0,0.25,0.50,0.75,1),
+                                                   labels=c("0","25","50","75","100"), expand = c(0,0)) +
+                                scale_x_discrete(drop=F, labels=breaks_labels) +
+                                mytheme + labs(alpha = "TSS within a CAGE peak") +
+                                ylab("Transcripts, %") +
+                                xlab("Distance to annotated transcription start site, bp") +
+                                labs(title=sample.names[[i]],
+                                     subtitle="Negative values indicate downstream of annotated TSS\n\n") +
+                                theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+                                theme(legend.justification=c(1,1), legend.position=c(1,1))
             }
         }
     }
-}
-if (!all(sapply(unlist(p.list), is.null))) {
-    for (j in seq_along(p22.stitles.ISM)) {
-        organize_in_grid_with_title(p22.stitles.ISM[[j]], p.list[[j]])
-        organize_in_grid_with_title(p22.stitles.ISM[[j]], p.list2[[j]])
+    if (!all(sapply(p.list, is.null))) {
+        organize_in_grid_with_title(p22.stitles.ISM[[j]], p.list)
+        organize_in_grid_with_title(p22.stitles.ISM[[j]], p.list2)
     }
+    rm(p.list)
+    rm(p.list2)
+    gc()
 }
-rm(p.list)
-rm(p.list2)
+
+
+
+
 
 
 

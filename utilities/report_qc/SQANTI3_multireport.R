@@ -2614,7 +2614,7 @@ rm(p.list)
 
 # PLOT polyA motif ranking, distance from 3' end
 p.list = vector("list", length(class.files))
-df.polyA_freq.list = vector("data.frame", length(class.files))
+df.polyA_freq.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     df.polyA <- as.data.frame(group_by(data.class.list[[i]], by=structural_category) %>%
                               dplyr::summarise(count=dplyr::n(),
@@ -2673,7 +2673,6 @@ for (i in seq_along(class.files)) {
                    labs(title=sample.names[[i]]) +
                    mytheme +
                    theme(legend.title=element_blank())
-    }
 }
 if (!all(sapply(p.list, is.null))) {
     page_title = textGrob("Distance of Detected PolyA Motif From 3'End\nby Non-FSM/ISM  Subcategories", gp=gpar(fontface="italic", fontsize=17))
@@ -2729,7 +2728,7 @@ rm(df.polyA_freq.list)
 
 
 ##### Distances to CAGE peaks by FSM and ISM
-if (!all(is.na(data.class.list[[1]]$dist_to_cage_peak))) {
+if (!all(is.na(data.class.list[[1]]$dist_to_CAGE_peak))) {
     s <- textGrob("CAGE Distances Analysis", gp=gpar(fontface="italic", fontsize=17), vjust = 0)
     grid.arrange(s)
 
@@ -2848,8 +2847,8 @@ if (!all(is.na(data.class.list[[1]]$dist_to_cage_peak))) {
             }
         }
     }
-    if (!all(sapply(p.list, is.null))) {
-        for (j in seq_along(cage.titles.FSM)) {
+    for (j in seq_along(cage.titles.FSM)) {
+        if (!all(sapply(p.list[[j]], is.null))) {
             organize_in_grid_with_title(cage.titles.FSM[[j]], p.list[[j]])
             organize_in_grid_with_title(cage.titles.FSM[[j]], p.list2[[j]])
         }
@@ -2953,8 +2952,8 @@ if (!all(is.na(data.class.list[[1]]$dist_to_cage_peak))) {
             }
         }
     }
-    if (!all(sapply(p.list, is.null))) {
-        for (j in seq_along(cage.titles.ISM)) {
+    for (j in seq_along(cage.titles.ISM)) {
+        if (!all(sapply(p.list[[j]], is.null))) {
             organize_in_grid_with_title(cage.titles.ISM[[j]], p.list[[j]])
             organize_in_grid_with_title(cage.titles.ISM[[j]], p.list2[[j]])
         }
@@ -3013,8 +3012,8 @@ if (!all(is.na(data.class.list[[1]]$dist_to_cage_peak))) {
     p.list = vector("list", length(cage.titles.NIC))
     p.list2 = vector("list", length(cage.titles.NIC))
     for (j in seq_along(cage.titles.NIC)) {
-        p.list[[j]] = vector("list", length(cage.titles.NIC))
-        p.list2[[j]] = vector("list", length(cage.titles.NIC))
+        p.list[[j]] = vector("list", length(class.files))
+        p.list2[[j]] = vector("list", length(class.files))
     }
 
     for (i in seq_along(class.files)) {
@@ -3051,10 +3050,10 @@ if (!all(is.na(data.class.list[[1]]$dist_to_cage_peak))) {
             }
         }
     }
-    if (!all(sapply(p.list, is.null))) {
-        for (j in seq_along(cage.titles.FSM)) {
-            organize_in_grid_with_title(cage.titles.FSM[[j]], p.list[[j]])
-            organize_in_grid_with_title(cage.titles.FSM[[j]], p.list2[[j]])
+    for (j in seq_along(cage.titles.NIC)) {
+        if (!all(sapply(p.list[[j]], is.null))) {
+            organize_in_grid_with_title(cage.titles.NIC[[j]], p.list[[j]])
+            organize_in_grid_with_title(cage.titles.NIC[[j]], p.list2[[j]])
         }
     }
     rm(p.list)
@@ -3147,10 +3146,10 @@ if (!all(is.na(data.class.list[[1]]$dist_to_cage_peak))) {
             }
         }
     }
-    if (!all(sapply(p.list, is.null))) {
-        for (j in seq_along(cage.titles.FSM)) {
-            organize_in_grid_with_title(cage.titles.FSM[[j]], p.list[[j]])
-            organize_in_grid_with_title(cage.titles.FSM[[j]], p.list2[[j]])
+    for (j in seq_along(cage.titles.NNC)) {
+        if (!all(sapply(p.list[[j]], is.null))) {
+            organize_in_grid_with_title(cage.titles.NNC[[j]], p.list[[j]])
+            organize_in_grid_with_title(cage.titles.NNC[[j]], p.list2[[j]])
         }
     }
     rm(p.list)
@@ -3160,7 +3159,7 @@ if (!all(is.na(data.class.list[[1]]$dist_to_cage_peak))) {
 
     p.list = vector("list", length(class.files))
     for (i in seq_along(class.files)) {
-        df.cage <- as.data.frame(group_by(data.class, by=structural_category) %>%
+        df.cage <- as.data.frame(group_by(data.class.list[[i]], by=structural_category) %>%
                                  dplyr::summarise(count=dplyr::n(),
                                                   cage_detected=length(which(within_CAGE_peak)),
                                                   cage_detected_perc=round(cage_detected*100/count) , 
@@ -3175,7 +3174,7 @@ if (!all(is.na(data.class.list[[1]]$dist_to_cage_peak))) {
 
     p.list = vector("list", length(class.files))
     for (i in seq_along(class.files)) {
-        df.cage_subc <- as.data.frame(group_by(data.class, by=subcategory) %>%
+        df.cage_subc <- as.data.frame(group_by(data.class.list[[i]], by=subcategory) %>%
                                       dplyr::summarise(count=dplyr::n(),
                                                        cage_detected=length(which(within_CAGE_peak)),
                                                        cage_detected_perc=round(cage_detected*100/count) ,
@@ -3894,7 +3893,7 @@ p.list = vector("list", length(class.files))
 #p28.RTS
 for (i in seq_along(class.files)) {
     if (n.data.junction.list[[i]] > 0) { ### was nrow(data.junction)
-        t3.data.sets.list[[i]] <- list()
+        # t3.data.sets.list[[i]] <- list()
         t3.list[[i]] <- list()
         # (Fran) ToDo: USE COVERAGE DATA LATER
         # for FSM, ISM, NIC, and NNC, plot the percentage of RTS and non-canonical junction
@@ -3979,11 +3978,11 @@ for (i in seq_along(class.files)) {
             t3.Cage.list[[i]]$perc <- t3.Cage.list[[i]]$count.x / t3.Cage.list[[i]]$count.y * 100
             t3.Cage.list[[i]] <- subset(t3.Cage.list[[i]], Coverage_Cage=='Has Coverage CAGE');
             t3.Cage.list[[i]]$Var <- t3.Cage.list[[i]]$Coverage_Cage
-            t3.data.sets.list[[i]][[length(t3.data.sets.list[[i]]) + 1]] <- !all(is.na(data.class$dist_to_cage_peak))
+            t3.data.sets.list[[i]][[length(t3.data.sets.list[[i]]) + 1]] <- !all(is.na(data.class.list[[i]]$dist_to_cage_peak))
             t3.list[[i]][[length(t3.list[[i]]) + 1]] <- t3.Cage.list[[i]]
 
 
-        if (!all(is.na(data.class$polyA_motif))) {
+        if (!all(is.na(data.class.list[[i]]$polyA_motif))) {
             x.list[[i]][which(is.na(x.list[[i]]$polyA_motif)),"Coverage_PolyA"] <- "No Coverage PolyA"
             x.list[[i]][which(!is.na(x.list[[i]]$polyA_motif)),"Coverage_PolyA"] <- "Has Coverage PolyA"
             t1.PolyA <- group_by(x.list[[i]], structural_category, Coverage_PolyA) %>% dplyr::summarise(count=dplyr::n(), .groups = 'drop')
@@ -3992,7 +3991,7 @@ for (i in seq_along(class.files)) {
             t3.PolyA.list[[i]]$perc <- t3.PolyA.list[[i]]$count.x / t3.PolyA.list[[i]]$count.y * 100
             t3.PolyA.list[[i]] <- subset(t3.PolyA.list[[i]], Coverage_PolyA=='Has Coverage PolyA');
             t3.PolyA.list[[i]]$Var <- t3.PolyA.list[[i]]$Coverage_PolyA
-            t3.data.sets.list[[i]][[length(t3.data.sets.list[[i]]) + 1]] = !all(is.na(data.class$polyA_motif))
+            t3.data.sets.list[[i]][[length(t3.data.sets.list[[i]]) + 1]] = !all(is.na(data.class.list[[i]]$polyA_motif))
             t3.list[[i]][[length(t3.list[[i]]) + 1]] = t3.PolyA.list[[i]]
 
         }
@@ -4016,7 +4015,7 @@ for (i in seq_along(class.files)) {
 
 
 # p28.Cov
-if (sum(n_t3.SJ.list) > 0 & sum(n_t3.RTS.list) > 0 & !all(is.na(data.class.list[[1]]$min_cov)))
+if (sum(n_t3.SJ.list) > 0 & sum(n_t3.RTS.list) > 0 & !all(is.na(data.class.list[[1]]$min_cov))) {
     p.list = vector("list", length(class.files))
     for (i in seq_along(class.files)) {
         if (n.data.junction.list[[i]] > 0) { ### was nrow(data.junction)
@@ -4205,12 +4204,13 @@ if (!all(is.na(data.class.list[[1]]$dist_to_cage_peak))) {
                            theme(legend.position="bottom", axis.title.x = element_blank()) +
                            ggtitle(paste0(sample.names[[i]], "\n\n")) +
                            theme(legend.title = element_blank())
+        }
+        if (!all(sapply(p.list, is.null))) {
+            page_title = textGrob("CAGE Support", gp=gpar(fontface="italic", fontsize=17))
+            organize_in_grid_with_title(page_title, p.list)
+        }
+        rm(p.list)
     }
-    if (!all(sapply(p.list, is.null))) {
-        page_title = textGrob("CAGE Support", gp=gpar(fontface="italic", fontsize=17))
-        organize_in_grid_with_title(page_title, p.list)
-    }
-    rm(p.list)
 }
 
 
@@ -4227,6 +4227,7 @@ for (i in seq_along(class.files)) {
                        mytheme +
                        theme(legend.position="bottom", axis.title.x = element_blank()) +
                        ggtitle(paste0(sample.names[[i]], "\n\n")) 
+    }
 }
 if (!all(sapply(p.list, is.null))) {
     page_title = textGrob("Annotation Support", gp=gpar(fontface="italic", fontsize=17))

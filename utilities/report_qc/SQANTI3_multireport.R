@@ -801,9 +801,11 @@ for (i in seq_along(class.files)) {
 }
 page_title = textGrob("Number of Isoforms per Gene", gp=gpar(fontface="italic", fontsize=17))
 organize_in_grid_with_title(page_title, p.list)
+rm(p.list)
 
 
 # p7: Distribution of Number of Isoforms, separated by Novel vs Annotated Genes
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     p.list[[i]] <- ggplot(data=isoPerGene.list[[i]], aes(x=novelGene)) +
                    geom_bar(position="fill", aes(y = (..count..)/sum(..count..), fill=nIsoCat), color="black", size=0.3, width=0.5) +
@@ -823,9 +825,11 @@ for (i in seq_along(class.files)) {
 }
 page_title = textGrob("Number of Isoforms per Gene", gp=gpar(fontface="italic", fontsize=17))
 organize_in_grid_with_title(page_title, p.list)
+rm(p.list)
 
 
 ##**** PLOT 6: Mono vs Multi-exon distribution for Known vs Novel Genes
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     p.list[[i]] <- ggplot(data=data.class.list[[i]], aes(x=novelGene)) +
                    geom_bar(position="fill",aes(y = (..count..)/sum(..count..), fill=exonCat), color="black", size=0.3, width=0.5) +
@@ -842,9 +846,10 @@ for (i in seq_along(class.files)) {
 }
 page_title = textGrob("Distribution of Mono- vs Multi-Exon Transcripts", gp=gpar(fontface="italic", fontsize=17))
 organize_in_grid_with_title(page_title, p.list)
+rm(p.list)
 
 
-
+p.list = vector("list", length(class.files))
 p.list2 = vector("list", length(class.files))
 ##**** PLOT  absolute and normalized % of different categories with increasing transcript length
 for (i in seq_along(class.files)) {
@@ -874,6 +879,7 @@ for (i in seq_along(class.files)) {
 }
 page_title = textGrob("Structural Categories by Transcript Length", gp=gpar(fontface="italic", fontsize=17))
 organize_in_grid_with_title(page_title, p.list)
+rm(p.list)
 page_title = textGrob("Structural Categories by Transcript Length", gp=gpar(fontface="italic", fontsize=17))
 organize_in_grid_with_title(page_title, p.list2)
 rm(p.list2)
@@ -881,6 +887,7 @@ rm(data.class.byLen)
 
 
 # PLOT 10: Gene Expression, if expression provided
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     if (!all(is.na(data.class.list[[i]]$iso_exp))) {
         if (!all(is.na(data.class.list[[i]]$iso_exp))) {
@@ -897,11 +904,15 @@ for (i in seq_along(class.files)) {
         }
     }
 }
-page_title = textGrob("Annotated vs Novel Gene Expression", gp=gpar(fontface="italic", fontsize=17))
-organize_in_grid_with_title(page_title, p.list)
+if (!all(sapply(p.list, is.null))) {
+    page_title = textGrob("Annotated vs Novel Gene Expression", gp=gpar(fontface="italic", fontsize=17))
+    organize_in_grid_with_title(page_title, p.list)
+}
+rm(p.list)
 
 
 # PLOT 11: Gene FL number, if FL count provided
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     if (!all(is.na(data.class.list[[i]]$FL))){
         if (!all(is.na(data.class.list[[i]]$FL))){
@@ -924,8 +935,11 @@ for (i in seq_along(class.files)) {
         }
     }
 }
-page_title = textGrob("Number of FL reads per Gene by Type of Gene Annotation", gp=gpar(fontface="italic", fontsize=17))
-organize_in_grid_with_title(page_title, p.list)
+if (!all(sapply(p.list, is.null))) {
+    page_title = textGrob("Number of FL reads per Gene by Type of Gene Annotation", gp=gpar(fontface="italic", fontsize=17))
+    organize_in_grid_with_title(page_title, p.list)
+}
+rm(p.list)
 
 
 
@@ -935,6 +949,7 @@ organize_in_grid_with_title(page_title, p.list)
 
 # PLOT length of isoforms
 # p.length.all: length of all isoforms, regardless of category
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     p.list[[i]] <- ggplot(data.class.list[[i]], aes(x=length)) +
                    geom_histogram(binwidth=100) +
@@ -945,6 +960,7 @@ for (i in seq_along(class.files)) {
 }
 page_title = textGrob("All Transcript Lengths Distribution", gp=gpar(fontface="italic", fontsize=17))
 organize_in_grid_with_title(page_title, p.list)
+rm(p.list)
 
 
 #### ADD stacked version of this data from plot above in the format of plot below where instead of structural categories we use samples
@@ -981,10 +997,12 @@ p.tmp2 <- p.tmp2 +
 grid.arrange(p.tmp, p.tmp2, ncol=2)
 rm(p.tmp)
 rm(p.tmp2)
+rm(concat.data.class)
 
 
 
 # p.length.cat: length of isoforms, by category
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     p.list[[i]] <- ggplot(data.class.list[[i]], aes(x=length, color=structural_category)) +
                    geom_freqpoly(binwidth=100, size=1) +
@@ -996,8 +1014,11 @@ for (i in seq_along(class.files)) {
 }
 page_title = textGrob("Transcript Lengths Distribution by Structural Category", gp=gpar(fontface="italic", fontsize=17))
 organize_in_grid_with_title(page_title, p.list)
+rm(p.list)
+
 
 # p.length.exon: length of isoforms, mono- vs mult-exon/ufrc/conesa/fpardopalacios/SQANTI_QDE/SQANTI3/melanoma_example/melanoma_chr13_tappAS_annot_from_SQANTI3.gff3
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     p.list[[i]] <- ggplot(data.class.list[[i]], aes(x=length, color=exonCat)) +
                    geom_freqpoly(binwidth=100, size=1) +
@@ -1008,11 +1029,13 @@ for (i in seq_along(class.files)) {
 }
 page_title = textGrob("Mono- vs Multi- Exon Transcript Lengths Distribution", gp=gpar(fontface="italic", fontsize=17))
 organize_in_grid_with_title(page_title, p.list)
+rm(p.list)
 
 
 
 # (optional) p.length.all.sample: length of all isoforms by sample
 if (length(FL_multisample_indices.list[[1]])>0) {  # has multiple samples
+    p.list = vector("list", length(class.files))
     p.list2 = vector("list", length(class.files))
     for (i in seq_along(class.files)) {
         df.length_by_sample <- data.frame();
@@ -1043,6 +1066,7 @@ if (length(FL_multisample_indices.list[[1]])>0) {  # has multiple samples
     page_title = textGrob("Mono- vs Multi-Exons Transcript Lengths by Sample", gp=gpar(fontface="italic", fontsize=17))
     organize_in_grid_with_title(page_title, p.list2)
     rm(p.list2)
+    rm(p.list)
 }
 
 
@@ -1054,6 +1078,7 @@ grid.arrange(s)
 
 
 #**** PLOT 1: Structural Classification
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     p.list[[i]] <- ggplot(data=data.class.list[[i]], aes(x=structural_category)) +
                    geom_bar(aes(y = (..count..)/sum(..count..)*100, alpha=coding, fill=structural_category), color="black", size=0.3, width=0.7) +
@@ -1075,6 +1100,7 @@ for (i in seq_along(class.files)) {
 }
 page_title = textGrob("Isoform Distribution Across Structural Categories", gp=gpar(fontface="italic", fontsize=17))
 organize_in_grid_with_title(page_title, p.list)
+rm(p.list)
 
 
 
@@ -1090,6 +1116,7 @@ p1.s.titles = list("Isoform Distribution Across FSM\n\n",
 
 categories.list=list(data.FSM.list, data.ISM.list, data.NNC.list, data.NIC.list, data.GenicGenomic.list, data.Antisense.list, data.Fusion.list, data.Intergenic.list, data.GenicIntron.list)
 
+p.list = vector("list", length(class.files))
 for(j in 1:length(categories.list)) {
     c <- categories.list[[j]]
     for (i in seq_along(class.files)) {
@@ -1108,13 +1135,17 @@ for(j in 1:length(categories.list)) {
                            theme(axis.title.x=element_blank())  
         }
     }
-    page_title = textGrob(p1.s.titles[j] , gp=gpar(fontface="italic", fontsize=17))
-    organize_in_grid_with_title(page_title, p.list)
+    if (!all(sapply(p.list, is.null))) {
+        page_title = textGrob(p1.s.titles[j] , gp=gpar(fontface="italic", fontsize=17))
+        organize_in_grid_with_title(page_title, p.list)
+    }
 }
 rm(categories.list)
+rm(p.list)
 
 
 #****  PLOT 4: Transcript lengths by category
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     p.list[[i]] <- ggplot(data=data.class.list[[i]], aes(x=structural_category, y=length, fill=structural_category)) +
                    geom_boxplot(color="black", size=0.3, outlier.size = 0.2) +
@@ -1129,7 +1160,10 @@ for (i in seq_along(class.files)) {
 }
 page_title = textGrob("Transcript Lengths by Structural Classification", gp=gpar(fontface="italic", fontsize=17))
 organize_in_grid_with_title(page_title, p.list)
+rm(p.list)
 
+
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     p.list[[i]] <- ggplot(data=data.FSMISM.list[[i]], aes(x=structural_category, y=length, fill=subcategory)) +
                    geom_boxplot(color="black", size=0.3, outlier.size = 0.2) +
@@ -1144,7 +1178,10 @@ for (i in seq_along(class.files)) {
 }
 page_title = textGrob("Transcript Lengths by Subcategory", gp=gpar(fontface="italic", fontsize=17))
 organize_in_grid_with_title(page_title, p.list)
+rm(p.list)
 
+
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     p.list[[i]] <- ggplot(data=data.NICNNC.list[[i]], aes(x=structural_category, y=length, fill=subcategory)) +
                    geom_boxplot(color="black", size=0.3, outlier.size = 0.2) +
@@ -1159,7 +1196,10 @@ for (i in seq_along(class.files)) {
 }
 page_title = textGrob("Transcript Lengths by Subcategory", gp=gpar(fontface="italic", fontsize=17))
 organize_in_grid_with_title(page_title, p.list)
+rm(p.list)
 
+
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     p.list[[i]] <- ggplot(data=data.other.list[[i]], aes(x=structural_category, y=length, fill=subcategory)) +
                    geom_boxplot(color="black", size=0.3, outlier.size = 0.2) +
@@ -1174,11 +1214,12 @@ for (i in seq_along(class.files)) {
 }
 page_title = textGrob("Transcript Lengths by Subcategory", gp=gpar(fontface="italic", fontsize=17))
 organize_in_grid_with_title(page_title, p.list)
-
+rm(p.list)
 
 
 
 ##**** PLOT 5: Exon counts by category
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     p.list[[i]] <- ggplot(data=data.class.list[[i]], aes(x=structural_category, y=exons, fill=structural_category)) +
                    geom_boxplot(color="black", size=0.3, outlier.size = 0.2) +
@@ -1193,8 +1234,11 @@ for (i in seq_along(class.files)) {
 }
 page_title = textGrob("Exon Counts by Structural Classification", gp=gpar(fontface="italic", fontsize=17))
 organize_in_grid_with_title(page_title, p.list)
+rm(p.list)
+
 
 ###Exon counts by subcategory
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     p.list[[i]] <- ggplot(data=data.FSMISM.list[[i]], aes(x=structural_category, y=exons, fill=subcategory)) +
                    geom_boxplot(color="black", size=0.3, outlier.size = 0.2) +
@@ -1209,7 +1253,10 @@ for (i in seq_along(class.files)) {
 }
 page_title = textGrob("Exon Counts by Subcategory", gp=gpar(fontface="italic", fontsize=17))
 organize_in_grid_with_title(page_title, p.list)
+rm(p.list)
 
+
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     p.list[[i]] <- ggplot(data=data.NICNNC.list[[i]], aes(x=structural_category, y=exons, fill=subcategory)) +
                    geom_boxplot(color="black", size=0.3, outlier.size = 0.2) +
@@ -1224,7 +1271,10 @@ for (i in seq_along(class.files)) {
 }
 page_title = textGrob("Exon Counts by Subcategory", gp=gpar(fontface="italic", fontsize=17))
 organize_in_grid_with_title(page_title, p.list)
+rm(p.list)
 
+
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     p.list[[i]] <- ggplot(data=data.other.list[[i]], aes(x=structural_category, y=exons, fill=subcategory)) +
                    geom_boxplot(color="black", size=0.3, outlier.size = 0.2) +
@@ -1239,9 +1289,11 @@ for (i in seq_along(class.files)) {
 }
 page_title = textGrob("Exon Counts by Subcategory", gp=gpar(fontface="italic", fontsize=17))
 organize_in_grid_with_title(page_title, p.list)
+rm(p.list)
 
 
 ##### STM plots
+p.list = vector("list", length(class.files))
 data.FSMISMNICNNC.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     data.FSMISMNICNNC.list[[i]] <- rbind(data.FSMISM.list[[i]], data.NICNNC.list[[i]])
@@ -1264,7 +1316,10 @@ for (i in seq_along(class.files)) {
 }
 page_title = textGrob("Isoform Distribution Across Structural Categories", gp=gpar(fontface="italic", fontsize=17))
 organize_in_grid_with_title(page_title, p.list)
+rm(p.list)
 
+
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     p.list[[i]] <- ggplot(data=data.FSMISMNICNNC.list[[i]], aes(x=structural_category)) +
                    geom_bar(aes(y = (..count..), alpha=STM, fill=structural_category), position="fill", color="black", size=0.3, width=0.7) +
@@ -1284,7 +1339,10 @@ for (i in seq_along(class.files)) {
 }
 page_title = textGrob("Isoform Distribution Across Structural Categories", gp=gpar(fontface="italic", fontsize=17))
 organize_in_grid_with_title(page_title, p.list)
+rm(p.list)
 
+
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     p.list[[i]] <- ggplot(data=data.FSMISM.list[[i]], aes(x=subcategory)) +
                    geom_bar(aes(y = (..count..), alpha=STM, fill=subcategory), color="black", size=0.3, width=0.7) +
@@ -1306,7 +1364,10 @@ for (i in seq_along(class.files)) {
 }
 page_title = textGrob("Isoform Distribution Across Structural Subcategories", gp=gpar(fontface="italic", fontsize=17))
 organize_in_grid_with_title(page_title, p.list)
+rm(p.list)
 
+
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     p.list[[i]] <- ggplot(data=data.FSMISM.list[[i]], aes(x=subcategory)) +
                    geom_bar(aes(y = (..count..), alpha=STM, fill=subcategory), position="fill", color="black", size=0.3, width=0.7) +
@@ -1328,7 +1389,10 @@ for (i in seq_along(class.files)) {
 }
 page_title = textGrob("Isoform Distribution Across Structural Subcategories", gp=gpar(fontface="italic", fontsize=17))
 organize_in_grid_with_title(page_title, p.list)
+rm(p.list)
 
+
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     p.list[[i]] <- ggplot(data=data.NICNNC.list[[i]], aes(x=subcategory)) +
                    geom_bar(aes(y = (..count..), alpha=STM, fill=subcategory), color="black", size=0.3, width=0.7) +
@@ -1350,7 +1414,10 @@ for (i in seq_along(class.files)) {
 }
 page_title = textGrob("Isoform Distribution Across Structural Subcategories", gp=gpar(fontface="italic", fontsize=17))
 organize_in_grid_with_title(page_title, p.list)
+rm(p.list)
 
+
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     p.list[[i]] <- ggplot(data=data.NICNNC.list[[i]], aes(x=subcategory)) +
                    geom_bar(aes(y = (..count..), alpha=STM, fill=subcategory), position="fill", color="black", size=0.3, width=0.7) +
@@ -1372,12 +1439,13 @@ for (i in seq_along(class.files)) {
 }
 page_title = textGrob("Isoform Distribution Across Structural Subcategories", gp=gpar(fontface="italic", fontsize=17))
 organize_in_grid_with_title(page_title, p.list)
-
+rm(p.list)
 
 
 
 # requires short reads
 ##**** PLOT 8: Expression, if isoform expression provided (iso_exp is in TPM)
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     if (!all(is.na(data.class.list[[i]]$iso_exp))) {
         p.list[[i]] <- ggplot(data=data.class.list[[i]], aes(x=structural_category, y=log2(iso_exp+1), fill=structural_category)) +
@@ -1392,9 +1460,14 @@ for (i in seq_along(class.files)) {
                        ggtitle(paste0(sample.names[i], "\n\n"))
     }
 }
-page_title = textGrob("Transcript Expression by Structural Category", gp=gpar(fontface="italic", fontsize=17))
-organize_in_grid_with_title(page_title, p.list)
+if (!all(sapply(p.list, is.null))) {
+    page_title = textGrob("Transcript Expression by Structural Category", gp=gpar(fontface="italic", fontsize=17))
+    organize_in_grid_with_title(page_title, p.list)
+}
+rm(p.list)
 
+
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     if (!all(is.na(data.FSMISM.list[[i]]$iso_exp))) {
     ###Expression, if isoform expression provided (iso_exp is in TPM) by subcategory
@@ -1411,9 +1484,14 @@ for (i in seq_along(class.files)) {
                       ggtitle(paste0(sample.names[i], "\n\n"))
     }
 }
-page_title = textGrob("Transcript Expression by Subcategory", gp=gpar(fontface="italic", fontsize=17))
-organize_in_grid_with_title(page_title, p.list)
+if (!all(sapply(p.list, is.null))) {
+    page_title = textGrob("Transcript Expression by Subcategory", gp=gpar(fontface="italic", fontsize=17))
+    organize_in_grid_with_title(page_title, p.list)
+}
+rm(p.list)
 
+
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     if (!all(is.na(data.NICNNC.list[[i]]$iso_exp))) {
         p.list[[i]] <- ggplot(data=data.NICNNC.list[[i]], aes(x=subcategory, y=log2(iso_exp+1), fill=subcategory)) +
@@ -1429,9 +1507,14 @@ for (i in seq_along(class.files)) {
                        ggtitle(paste0(sample.names[i], "\n\n"))
     }
 }
-page_title = textGrob("Transcript Expression by Subcategory", gp=gpar(fontface="italic", fontsize=17))
-organize_in_grid_with_title(page_title, p.list)
+if (!all(sapply(p.list, is.null))) {
+    page_title = textGrob("Transcript Expression by Subcategory", gp=gpar(fontface="italic", fontsize=17))
+    organize_in_grid_with_title(page_title, p.list)
+}
+rm(p.list)
 
+
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     if (!all(is.na(data.other.list[[i]]$iso_exp))) {
         p.list[[i]] <- ggplot(data=data.other.list[[i]], aes(x=subcategory, y=log2(iso_exp+1), fill=subcategory)) +
@@ -1447,12 +1530,16 @@ for (i in seq_along(class.files)) {
                        ggtitle(paste0(sample.names[i], "\n\n"))
     }
 }
-page_title = textGrob("Transcript Expression by Subcategory", gp=gpar(fontface="italic", fontsize=17))
-organize_in_grid_with_title(page_title, p.list)
+if (!all(sapply(p.list, is.null))) {
+    page_title = textGrob("Transcript Expression by Subcategory", gp=gpar(fontface="italic", fontsize=17))
+    organize_in_grid_with_title(page_title, p.list)
+}
+rm(p.list)
 
 # requires --fl_count
 # PLOT 9: FL number, if FL count provided
 # convert FL count to TPM
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     if (!all(is.na(data.class.list[[i]]$FL))) {
         p.list[[i]] <- ggplot(data=data.class.list[[i]], aes(x=structural_category, y=log2(FL_TPM+1), fill=structural_category)) +
@@ -1468,9 +1555,14 @@ for (i in seq_along(class.files)) {
                        ggtitle(paste0(sample.names[i], "\n\n"))
     }
 }
-page_title = textGrob("Long Reads Count by Structural Category", gp=gpar(fontface="italic", fontsize=17))
-organize_in_grid_with_title(page_title, p.list)
+if (!all(sapply(p.list, is.null))) {
+    page_title = textGrob("Long Reads Count by Structural Category", gp=gpar(fontface="italic", fontsize=17))
+    organize_in_grid_with_title(page_title, p.list)
+}
+rm(p.list)
 
+
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     if (!all(is.na(data.FSMISM.list[[i]]$FL))) {
         p.list[[i]] <- ggplot(data=data.FSMISM.list[[i]], aes(x=subcategory, y=log2(FL_TPM+1), fill=subcategory)) +
@@ -1487,9 +1579,14 @@ for (i in seq_along(class.files)) {
                        ggtitle(paste0(sample.names[i], "\n\n"))
     }
 }
-page_title = textGrob("Long Reads Count by Subcategory", gp=gpar(fontface="italic", fontsize=17))
-organize_in_grid_with_title(page_title, p.list)
+if (!all(sapply(p.list, is.null))) {
+    page_title = textGrob("Long Reads Count by Subcategory", gp=gpar(fontface="italic", fontsize=17))
+    organize_in_grid_with_title(page_title, p.list)
+}
+rm(p.list)
 
+
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     if (!all(is.na(data.NICNNC.list[[i]]$FL))) {
         p.list[[i]] <- ggplot(data=data.NICNNC.list[[i]], aes(x=subcategory, y=log2(FL_TPM+1), fill=subcategory)) +
@@ -1506,9 +1603,14 @@ for (i in seq_along(class.files)) {
                        ggtitle(paste0(sample.names[i], "\n\n"))
     }
 }
-page_title = textGrob("Long Reads Count by Subcategory", gp=gpar(fontface="italic", fontsize=17))
-organize_in_grid_with_title(page_title, p.list)
+if (!all(sapply(p.list, is.null))) {
+    page_title = textGrob("Long Reads Count by Subcategory", gp=gpar(fontface="italic", fontsize=17))
+    organize_in_grid_with_title(page_title, p.list)
+}
+rm(p.list)
 
+
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     if (!all(is.na(data.other.list[[i]]$FL))) {
         p.list[[i]] <- ggplot(data=data.other.list[[i]], aes(x=subcategory, y=log2(FL_TPM+1), fill=subcategory)) +
@@ -1525,16 +1627,18 @@ for (i in seq_along(class.files)) {
                        ggtitle(paste0(sample.names[i], "\n\n"))
     }
 }
-page_title = textGrob("Long Reads Count by Subcategory", gp=gpar(fontface="italic", fontsize=17))
-organize_in_grid_with_title(page_title, p.list)
-
+if (!all(sapply(p.list, is.null))) {
+    page_title = textGrob("Long Reads Count by Subcategory", gp=gpar(fontface="italic", fontsize=17))
+    organize_in_grid_with_title(page_title, p.list)
+}
+rm(p.list)
 
 
 
 
 
 #**** PLOTS 2-3: refLength and refExons for ISM and FSM transcripts. Plot if any ISM or FSM transcript
-
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     if (nrow(data.FSMISM.list[[i]]) > 0) {
         p.list[[i]] <- ggplot(data=data.FSMISM.list[[i]], aes(x=structural_category, y=ref_length/1000, fill=structural_category)) +
@@ -1548,9 +1652,14 @@ for (i in seq_along(class.files)) {
                             subtitle="Applicable Only to FSM and ISM Categories\n\n")
     }
 }
-page_title = textGrob("Length Distribution of Matched Reference Transcripts", gp=gpar(fontface="italic", fontsize=17))
-organize_in_grid_with_title(page_title, p.list)
+if (!all(sapply(p.list, is.null))) {
+    page_title = textGrob("Length Distribution of Matched Reference Transcripts", gp=gpar(fontface="italic", fontsize=17))
+    organize_in_grid_with_title(page_title, p.list)
+}
+rm(p.list)
 
+
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     if (nrow(data.FSMISM.list[[i]]) > 0) {
         p.list[[i]] <- ggplot(data=data.FSMISM.list[[i]], aes(x=structural_category, y=ref_exons, fill=structural_category)) +
@@ -1565,15 +1674,18 @@ for (i in seq_along(class.files)) {
                             subtitle="Applicable Only to FSM and ISM Categories\n\n")
     }
 }
-page_title = textGrob("Exon Count Distribution of Matched Reference Transcripts", gp=gpar(fontface="italic", fontsize=17))
-organize_in_grid_with_title(page_title, p.list)
-
+if (!all(sapply(p.list, is.null))) {
+    page_title = textGrob("Exon Count Distribution of Matched Reference Transcripts", gp=gpar(fontface="italic", fontsize=17))
+    organize_in_grid_with_title(page_title, p.list)
+}
+rm(p.list)
 
 
 
 
 # PLOT 12: NNC expression genes vs not NNC expression genes
 # NNC expression genes vs not NNC expression genes
+p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     if (!all(is.na(data.class.list[[i]]$gene_exp))) {
         if (nrow(data.class.list[[i]][data.class.list[[i]]$structural_category=="NNC",])!=0) {
@@ -1599,8 +1711,11 @@ for (i in seq_along(class.files)) {
         }
     }
 }
-page_title = textGrob("Gene Expression of NNC And Not NNC Containing Genes", gp=gpar(fontface="italic", fontsize=17))
-organize_in_grid_with_title(page_title, p.list)
+if (!all(sapply(p.list, is.null))) {
+    page_title = textGrob("Gene Expression of NNC And Not NNC Containing Genes", gp=gpar(fontface="italic", fontsize=17))
+    organize_in_grid_with_title(page_title, p.list)
+}
+rm(p.list)
 
 
 

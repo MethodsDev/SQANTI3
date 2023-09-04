@@ -68,12 +68,12 @@ if (!(report.format %in% c('pdf', 'html', 'both'))) {
 }
 
 # source(paste(utilities.path, "/report_qc/generatePDFreport.R", sep = "/"))
-source(paste(utilities.path, "/report_qc/generatePDFmultireport.R", sep = "/"))
+# source(paste(utilities.path, "/report_qc/generatePDFmultireport.R", sep = "/"))
 
 if (saturation.curves=='True'){
-    source(paste(utilities.path, "/report_qc/saturation/plot_saturation.R", sep = "/"))
-    source(paste(utilities.path, "/report_qc/saturation/LR_saturation.R", sep = "/"))
-    source(paste(utilities.path, "/report_qc/saturation/data_prep_saturation.R", sep = "/"))
+    source(paste(utilities.path, "/saturation/plot_saturation.R", sep = "/"))
+    source(paste(utilities.path, "/saturation/LR_saturation.R", sep = "/"))
+    source(paste(utilities.path, "/saturation/data_prep_saturation.R", sep = "/"))
 }
 
 # report.prefix <- strsplit(class.file, "_classification.txt")[[1]][1];

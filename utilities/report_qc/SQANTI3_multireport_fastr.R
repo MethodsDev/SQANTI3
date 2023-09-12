@@ -101,6 +101,7 @@ library(plotly)
 library(dplyr)
 library(RColorBrewer)
 library(data.table)
+library(purrr)
 # library(R.utils) # needs to be installed for gz reading with data.table::fread
 
 
@@ -148,6 +149,7 @@ STM_function <- function(x){
         return("Not fully supported")
     }
 }
+
 
 
 # ***********************
@@ -318,8 +320,6 @@ subcategories.ISM.list = vector("list", length(class.files))
 subcategories.NIC.list = vector("list", length(class.files))
 subcategories.NNC.list = vector("list", length(class.files))
 data.junction.list = vector("list", length(class.files))
-uniqJunc.list = vector("list", length(class.files))
-uniqJuncRTS.list = vector("list", length(class.files))
 FL_multisample_indices.list = vector("list", length(class.files))
 FL_multisample_names.list = vector("list", length(class.files))
 
@@ -564,28 +564,7 @@ for (i in seq_along(class.files)) {
     data.Intergenic.list[[i]] = data.Intergenic
     data.GenicIntron.list[[i]] = data.GenicIntron
 
-    # subcategories data sets
-    #"FSM"
-    # data.alt3end.list[[i]] = data.alt3end
-    # data.alt35end.list[[i]] = data.alt35end
-    # data.alt5end.list[[i]] = data.alt5end
     data.refmatch.list[[i]] = data.refmatch
-    #"ISM"
-    # data.3fragment.list[[i]] = data.3fragment
-    # data.int_fragment.list[[i]] = data.int_fragment
-    # data.5fragment.list[[i]] = data.5fragment
-    # data.intron_ret_ISM.list[[i]] = data.intron_ret_ISM
-    #"NIC"
-    # data.comb_annot_js_NIC.list[[i]] = data.comb_annot_js_NIC
-    # data.comb_annot_ss_NIC.list[[i]] = data.comb_annot_ss_NIC
-    # data.intron_ret_NIC.list[[i]] = data.intron_ret_NIC
-    # data.mono_ex_intron_ret_NIC.list[[i]] = data.mono_ex_intron_ret_NIC
-    #"NNC"
-    # data.comb_annot_js_NNC.list[[i]] = data.comb_annot_js_NNC
-    # data.comb_annot_ss_NNC.list[[i]] = data.comb_annot_ss_NNC
-    # data.intron_ret_NNC.list[[i]] = data.intron_ret_NNC
-    # data.mono_ex_intron_ret_NNC.list[[i]] = data.mono_ex_intron_ret_NNC
-    # data.one_don_acc.list[[i]] = data.one_don_acc
 
     subcategories.FSM.list[[i]] <- list(data.alt3end, data.alt35end, data.alt5end, data.refmatch)
     subcategories.ISM.list[[i]] <- list(data.3fragment, data.int_fragment, data.5fragment, data.intron_ret_ISM)
@@ -595,15 +574,6 @@ for (i in seq_along(class.files)) {
     isoPerGene.list[[i]] = isoPerGene
 
     data.junction.list[[i]] = data.junction
-    # # data.junction.list[[i]] = as.data.frame(data.junction)
-
-    # uniqJunc.list[[i]] <- unique(data.junction[,c("junctionLabel", "SJ_type", "total_coverage_unique")]);
-    # uniqJuncRTS.list[[i]] <- unique(data.junction[,c("junctionLabel","SJ_type", "RTS_junction")]);
-    # uniqJunc.list[[i]] <- as.list(unique(data.junction[,c("junctionLabel", "SJ_type", "total_coverage_unique")]));
-    uniqJunc.list[[i]] <- as.data.frame(unique(data.junction[,c("junctionLabel", "SJ_type", "total_coverage_unique")]));
-    # uniqJuncRTS.list[[i]] <- as.list(unique(data.junction[,c("junctionLabel","SJ_type", "RTS_junction")]));
-    uniqJuncRTS.list[[i]] <- as.data.frame(unique(data.junction[,c("junctionLabel","SJ_type", "RTS_junction")]));
-
 
     FL_multisample_indices.list[[i]] = FL_multisample_indices
 
@@ -659,78 +629,12 @@ cover <- textGrob("SQANTI3 report", gp=gpar(fontface="italic", fontsize=40, col=
 grid.draw(cover)
 
 
-# gt1.list = vector("list", length(class.files)+1)
-# gt2.list = vector("list", length(class.files)+1)
-# gt3.list = vector("list", length(class.files)+1)
-# gt4.list = vector("list", length(class.files)+1)
-# gt1.list[[1]] = textGrob("Transcript Classification", gp=gpar(fontface="italic", fontsize=17), vjust = -3.2)
-# gt2.list[[1]] = textGrob("Gene Classification", gp=gpar(fontface="italic", fontsize=17), vjust = -4)
-# gt3.list[[1]] = textGrob("Splice Junction Classification", gp=gpar(fontface="italic", fontsize=17), vjust = -5)
-# gt4.list[[1]] = textGrob("Unique Counts Summary", gp=gpar(fontface="italic", fontsize=17), vjust = -4)
-# for (i in seq_along(class.files)) {
-#     # TABLE 1: Number of isoforms in each structural category
-#     
-#     freqCat <- as.data.frame(table(data.class.list[[i]]$structural_category))
-#     #freqCat$ranking = order(freqCat$Freq,decreasing = T)
-#     table1 <- tableGrob(freqCat, rows = NULL, cols = c("Category","Isoforms, count"))
-#     # title1 <- textGrob("Transcript Classification\n", gp=gpar(fontface="italic", fontsize=17), vjust = -3.2)
-#     title1 <- textGrob(paste0(sample.names[1], "\n"), gp=gpar(fontface="italic", fontsize=17), vjust = -3.2)
-#     gt1.list[[i+1]] <- gTree(children=gList(table1, title1))
-# 
-#     # TABLE 2: Number of Novel vs Known Genes
-#     freqCat = as.data.frame(table(isoPerGene.list[[i]]$novelGene))
-#     table2 <- tableGrob(freqCat, rows = NULL, cols = c("Category","Genes, count"))
-#     #title2 <- textGrob("Gene Classification", gp=gpar(fontface="italic", fontsize=17), vjust = -4)
-#     title2 <- textGrob(sample.names[i], gp=gpar(fontface="italic", fontsize=17), vjust = -4)#
-#     gt2.list[[i+1]] <- gTree(children=gList(table2, title2))
-#     
-#     # TABLE 3: Junction Classification
-#     
-#     uniq_sj_count <- nrow(uniqJunc.list[[i]])
-#     
-#     freqCat <- as.data.frame(table(uniqJunc.list[[i]]$SJ_type))
-#     freqCat$Var1 <- gsub(" ", "", freqCat$Var1)
-#     freqCat$Var1 <- gsub("\n", " ", freqCat$Var1)
-#     freqCat$Frac <- round(freqCat$Freq*100 / uniq_sj_count, 2)
-#     table2 <- tableGrob(freqCat, rows = NULL, cols = c("Category","SJs, count","Percent"))
-#     # title2 <- textGrob("Splice Junction Classification", gp=gpar(fontface="italic", fontsize=17), vjust = -5)
-#     title2 <- textGrob(sample.names[i], gp=gpar(fontface="italic", fontsize=17), vjust = -5)
-#     gt3.list[[i+1]] <- gTree(children=gList(table2, title2))
-#     
-#     # TABLE 4: Summary number of Unique Isoforms and Unique Genes
-#     nGenes = nrow(isoPerGene.list[[i]])
-#     nIso = nrow(data.class.list[[i]])
-#     sn = paste(sample.names[i], "\n", "Unique Genes: ", nGenes, "\n", "Unique Isoforms: ", nIso)
-#     gt4.list[[i+1]] <- textGrob(sn, gp=gpar(fontface="italic", fontsize=17), vjust = 0)
-#     
-#     # Plot Table 1 and Table 2
-# #    grid.arrange(gt4,gt2,gt1, layout_matrix = cbind(c(1,2),c(1,4)))
-# #    grid.arrange(gt3)
-# }
-# 
-# # title1 = textGrob("Transcript Classification\n", gp=gpar(fontface="italic", fontsize=17), vjust = -3.2)
-# organize_in_grid_with_title(gt1.list)
-# # title1 = textGrob("Gene Classification", gp=gpar(fontface="italic", fontsize=17), vjust = -4)
-# organize_in_grid_with_title(gt2.list)
-# # title1 = textGrob("Splice Junction Classification", gp=gpar(fontface="italic", fontsize=17), vjust = -5)
-# organize_in_grid_with_title(gt3.list)
-# # title1 = textGrob("Unique Counts Summary", gp=gpar(fontface="italic", fontsize=17), vjust = -4)
-# organize_in_grid_with_title(gt4.list)
-# rm(gt1.list)
-# rm(gt2.list)
-# rm(gt3.list)
-# rm(gt4.list)
-
 
 
 gt1.list = vector("list", length(class.files))
 gt2.list = vector("list", length(class.files))
 gt3.list = vector("list", length(class.files))
 gt4.list = vector("list", length(class.files))
-# gt1.list[[1]] = textGrob("Transcript Classification", gp=gpar(fontface="italic", fontsize=17), vjust = -3.2)
-# gt2.list[[1]] = textGrob("Gene Classification", gp=gpar(fontface="italic", fontsize=17), vjust = -4)
-# gt3.list[[1]] = textGrob("Splice Junction Classification", gp=gpar(fontface="italic", fontsize=17), vjust = -5)
-# gt4.list[[1]] = textGrob("Unique Counts Summary", gp=gpar(fontface="italic", fontsize=17), vjust = -4)
 for (i in seq_along(class.files)) {
     # TABLE 1: Number of isoforms in each structural category
     
@@ -750,10 +654,11 @@ for (i in seq_along(class.files)) {
     
     # TABLE 3: Junction Classification
     
-    # uniq_sj_count <- nrow(uniqJunc.list[[i]])
-    uniq_sj_count <- length(uniqJunc.list[[i]])
+    uniqJunc <- unique(data.junction.list[[i]][,c("junctionLabel", "SJ_type", "total_coverage_unique")]);
+    uniq_sj_count <- nrow(uniqJunc)
     
-    freqCat <- as.data.frame(table(uniqJunc.list[[i]]$SJ_type))
+    freqCat <- as.data.frame(table(uniqJunc$SJ_type))
+    rm(uniqJunc)
     freqCat$Var1 <- gsub(" ", "", freqCat$Var1)
     freqCat$Var1 <- gsub("\n", " ", freqCat$Var1)
     freqCat$Frac <- round(freqCat$Freq*100 / uniq_sj_count, 2)
@@ -970,38 +875,71 @@ rm(p.list)
 #### ADD stacked version of this data from plot above in the format of plot below where instead of structural categories we use samples
 
 
-# tmp.data.class = do.call(rbind, data.class.list)
-concat.data.class = bind_rows(data.class.list)
-# concat.data.class$df = as.factor(concat.data.class$df)
-p.tmp <- ggplot(concat.data.class, aes(x=length, color=sample_name)) +
-                geom_freqpoly(binwidth=100, size=1) +
-                scale_color_manual(values = sample.palette, name="Sample") +
-                labs(x="Transcript length", y="Count", title="Transcript Lengths Distribution by Sample") +
-                scale_y_continuous(expand=expansion(mult = c(0,0.1))) +
-                mytheme+
-                theme(legend.position="bottom", legend.title=element_blank())
-#grid.arrange(p.tmp)
+compute_bins <- function(data_tbl, sample_name, bin_width = 100) {
+    breaks <- seq(0 - bin_width/2, 
+                  to = ceiling((max(data_tbl$length) - bin_width/2) / bin_width) * bin_width + bin_width/2, 
+                  by = bin_width)
 
-p.tmp2 <- ggplot(concat.data.class, aes(x=length, color=sample_name, y=..density..)) +
-                 geom_density(adjust = 1/5, size=1) +  # the adjust argument controls the bandwidth of the density estimate
-                 scale_color_manual(values = sample.palette, name="Sample") +
-                 labs(x="Transcript length", y="Density", title="Normalized Transcript Lengths Distribution by Sample") +
-                 scale_y_continuous(expand=expansion(mult = c(0,0.1))) +
-                 mytheme +
-                 theme(legend.position="bottom", legend.title=element_blank())
+    bins <- cut(data_tbl$length, 
+                breaks=breaks, 
+                include.lowest=TRUE, 
+                labels=FALSE) * bin_width
+
+    binned_data <- data.frame(bin = bins, length = data_tbl$length) %>%
+                              group_by(bin) %>%
+                              summarize(count=n()) %>%
+                              ungroup()
+
+    all_bins <- data.frame(bin = breaks[-length(breaks)] + bin_width/2)  # Take mid points of the breaks for bins
+    binned_data <- all_bins %>%
+                   left_join(binned_data, by = "bin") %>%
+                   mutate(count = ifelse(is.na(count), 0, count))
+
+    total_count <- nrow(data_tbl)
+    binned_data$normalized_count <- binned_data$count / total_count
+    binned_data$sample_name <- sample_name
+    
+    return(binned_data)
+}
+
+
+binned_data_list <- map2(data.class.list, sample.names, compute_bins)
+combined_binned_data = bind_rows(binned_data_list)
+rm(binned_data_list)
+p.tmp <- ggplot(combined_binned_data, aes(x=bin, y=count, color=sample_name)) +
+          geom_line(size=1) +
+          scale_color_manual(values = sample.palette, name="Sample") +
+          labs(x="Transcript length", y="Normalized Count", title="Normalized Transcript Lengths Distribution by Sample") +
+          scale_y_continuous(expand=expansion(mult = c(0,0.1))) +
+          mytheme +
+          theme(legend.position="bottom", legend.title=element_blank())
+
+p.tmp2 <- ggplot(combined_binned_data, aes(x=bin, y=normalized_count, color=sample_name)) +
+          geom_line(size=1) +
+          scale_color_manual(values = sample.palette, name="Sample") +
+          labs(x="Transcript length", y="Normalized Count", title="Normalized Transcript Lengths Distribution by Sample") +
+          scale_y_continuous(expand=expansion(mult = c(0,0.1))) +
+          mytheme +
+          theme(legend.position="bottom", legend.title=element_blank())
+
 grid.arrange(p.tmp, p.tmp2, ncol=2)
 
-x_limit <- quantile(concat.data.class$length, 0.99)
+# x_limit <- quantile(concat.data.class$length, 0.99)
+x_limit = max(sapply(data.class.list, function(dt) quantile(dt$length, 0.99)))
+
 p.tmp <- p.tmp + 
         coord_cartesian(xlim = c(0, x_limit)) +
         labs(title = paste("Transcript Lengths Distribution by Sample (Top 1% at >", round(x_limit), "excluded)"))
 p.tmp2 <- p.tmp2 + 
          coord_cartesian(xlim = c(0, x_limit)) +
          labs(title = paste("Normalized Transcript Lengths Distribution by Sample (Top 1% at >", round(x_limit), "excluded)"))
+
 grid.arrange(p.tmp, p.tmp2, ncol=2)
 rm(p.tmp)
 rm(p.tmp2)
-rm(concat.data.class)
+# rm(p.tmp3)
+# rm(concat.data.class)
+rm(combined_binned_data)
 
 
 
@@ -1145,6 +1083,11 @@ for(j in 1:length(categories.list)) {
     }
 }
 rm(categories.list)
+rm(data.GenicGenomic.list)
+rm(data.Antisense.list)
+rm(data.Fusion.list)
+rm(data.Intergenic.list)
+rm(data.GenicIntron.list)
 rm(p.list)
 
 
@@ -1937,8 +1880,10 @@ rm(p.list)
 p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
     if (sum(data.junction.list[[i]]$RTS_junction=='TRUE') > 0) {
-        c <- data.frame(table(uniqJuncRTS.list[[i]]$SJ_type));
-        d <- data.frame(table(subset(uniqJuncRTS.list[[i]], RTS_junction=='TRUE')$SJ_type));
+        uniqJuncRTS <- unique(data.junction.list[[i]][,c("junctionLabel","SJ_type", "RTS_junction")]);
+        c <- data.frame(table(uniqJuncRTS$SJ_type));
+        d <- data.frame(table(subset(uniqJuncRTS, RTS_junction=='TRUE')$SJ_type));
+        rm(uniqJuncRTS)
 
         df.uniqRTS <- merge(c, d, by="Var1");
         df.uniqRTS$perc <- df.uniqRTS$Freq.y/df.uniqRTS$Freq.x *100
@@ -1965,7 +1910,7 @@ if (!all(sapply(p.list, is.null))) {
     rm(df.uniqRTS)
     rm(c)
     rm(d)
-    rm(uniqJuncRTS.list)
+    # rm(uniqJuncRTS.list)
     n.data.junction.list = lapply(data.junction.list, nrow)
     rm(data.junction.list)
 }

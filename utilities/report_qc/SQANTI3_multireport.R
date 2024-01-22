@@ -100,6 +100,8 @@ library(plyr)
 library(plotly)
 library(dplyr)
 library(RColorBrewer)
+library(data.table)
+# library(R.utils) # needs to be installed for gz reading with data.table::fread
 
 
 ####### SRTM and SNTM functions
@@ -310,23 +312,7 @@ data.Antisense.list = vector("list", length(class.files))
 data.Fusion.list = vector("list", length(class.files))
 data.Intergenic.list = vector("list", length(class.files))
 data.GenicIntron.list = vector("list", length(class.files))
-# data.alt3end.list = vector("list", length(class.files))
-# data.alt35end.list = vector("list", length(class.files))
-# data.alt5end.list = vector("list", length(class.files))
 data.refmatch.list = vector("list", length(class.files))
-# data.3fragment.list = vector("list", length(class.files))
-# data.int_fragment.list = vector("list", length(class.files))
-# data.5fragment.list = vector("list", length(class.files))
-# data.intron_ret_ISM.list = vector("list", length(class.files))
-# data.comb_annot_js_NIC.list = vector("list", length(class.files))
-# data.comb_annot_ss_NIC.list = vector("list", length(class.files))
-# data.intron_ret_NIC.list = vector("list", length(class.files))
-# data.mono_ex_intron_ret_NIC.list = vector("list", length(class.files))
-# data.comb_annot_js_NNC.list = vector("list", length(class.files))
-# data.comb_annot_ss_NNC.list = vector("list", length(class.files))
-# data.intron_ret_NNC.list = vector("list", length(class.files))
-# data.mono_ex_intron_ret_NNC.list = vector("list", length(class.files))
-# data.one_don_acc.list = vector("list", length(class.files))
 subcategories.FSM.list = vector("list", length(class.files))
 subcategories.ISM.list = vector("list", length(class.files))
 subcategories.NIC.list = vector("list", length(class.files))
@@ -339,13 +325,14 @@ FL_multisample_names.list = vector("list", length(class.files))
 
 for (i in seq_along(class.files)) {
 
-    class.file = class.files[i]
-    if (tools::file_ext(class.file) == "gz") {
-        data.class <- read.table(connection <- gzfile(class.file, 'rt'), header=T, as.is=T, sep="\t")
-        close(connection)
-    } else {
-        data.class = read.table(class.file, header=T, as.is=T, sep="\t")
-    }
+    #class.file = class.files[i]
+    # if (tools::file_ext(class.file) == "gz") {
+    #     data.class <- read.table(connection <- gzfile(class.file, 'rt'), header=T, as.is=T, sep="\t")
+    #     close(connection)
+    # } else {
+    #     data.class = read.table(class.file, header=T, as.is=T, sep="\t")
+    # }
+    data.class = fread(class.files[i], drop = c("min_sample_cov", "sd_cov", "n_indels", "n_indels_junc", "bite", "ratio_exp", "ORF_length", "CDS_length", "CDS_start", "CDS_end", "CDS_genomic_start", "CDS_genomic_end", "ORF_seq", "dist_to_polyA_site", "within_polyA_site"))
 
     rownames(data.class) <- data.class$isoform
 
@@ -441,6 +428,11 @@ for (i in seq_along(class.files)) {
 
     ################################
 
+
+
+
+    # data.class = as.data.frame(data.class)
+
     data.FSMISM <- subset(data.class, structural_category %in% c('FSM', 'ISM'))
     data.NICNNC <- subset(data.class, structural_category %in% c("NIC", "NNC"))
     data.other <- subset(data.class, structural_category %in% c("Genic\nGenomic",  "Antisense", "Fusion","Intergenic", "Genic\nIntron"))
@@ -478,13 +470,16 @@ for (i in seq_along(class.files)) {
     data.one_don_acc <- subset(data.NNC, (subcategory=="At least 1 annot. don./accept."))
 
     ########### Junction information
-    junc.file = junc.files[i]
-    if (tools::file_ext(class.file) == "gz") {
-        data.junction <- read.table(connection <- gzfile(junc.file, 'rt'), header=T, as.is=T, sep="\t")
-        close(connection)
-    } else {
-        data.junction = read.table(junc.file, header=T, as.is=T, sep="\t")
-    }
+    # junc.file = junc.files[i]
+    # if (tools::file_ext(class.file) == "gz") {
+    #     data.junction <- read.table(connection <- gzfile(junc.file, 'rt'), header=T, as.is=T, sep="\t")
+    #     close(connection)
+    # } else {
+    #     data.junction = read.table(junc.file, header=T, as.is=T, sep="\t")
+    # }
+
+    data.junction = fread(junc.files[i], drop = c("junction_number", "transcript_coord", "start_site_category", "end_site_category", "diff_to_Ref_start_site", "diff_to_Ref_end_site", "bite_junction", "splice_site", "indel_near_junct", "phyloP_start", "phyloP_end", "sample_with_cov", "total_coverage_multi"))
+
 
     # make a unique identifier using chrom_strand_start_end
     data.junction$junctionLabel = with(data.junction, paste(chrom, strand, genomic_start_coord, genomic_end_coord, sep="_"))
@@ -493,7 +488,9 @@ for (i in seq_along(class.files)) {
     data.junction$SJ_type <- factor(data.junction$SJ_type, levels=c("known_canonical_SJ", "known_non_canonical_SJ", "novel_canonical_SJ", "novel_non_canonical_SJ"),
                                                            labels=c("Known\ncanonical ", "Known\nNon-canonical ", "Novel\ncanonical ", "Novel\nNon-canonical "), order=T)
 
-    data.junction$structural_category = data.class[data.junction$isoform, "structural_category"]
+    # data.junction$structural_category = data.class[data.junction$isoform, "structural_category"]
+    data.junction <-data.junction[data.class, structural_category := i.structural_category, on = .(isoform)]
+
 
 
     # see if there are multple FL samples
@@ -598,9 +595,15 @@ for (i in seq_along(class.files)) {
     isoPerGene.list[[i]] = isoPerGene
 
     data.junction.list[[i]] = data.junction
+    # # data.junction.list[[i]] = as.data.frame(data.junction)
 
-    uniqJunc.list[[i]] <- unique(data.junction[,c("junctionLabel", "SJ_type", "total_coverage_unique")]);
-    uniqJuncRTS.list[[i]] <- unique(data.junction[,c("junctionLabel","SJ_type", "RTS_junction")]);
+    # uniqJunc.list[[i]] <- unique(data.junction[,c("junctionLabel", "SJ_type", "total_coverage_unique")]);
+    # uniqJuncRTS.list[[i]] <- unique(data.junction[,c("junctionLabel","SJ_type", "RTS_junction")]);
+    # uniqJunc.list[[i]] <- as.list(unique(data.junction[,c("junctionLabel", "SJ_type", "total_coverage_unique")]));
+    uniqJunc.list[[i]] <- as.data.frame(unique(data.junction[,c("junctionLabel", "SJ_type", "total_coverage_unique")]));
+    # uniqJuncRTS.list[[i]] <- as.list(unique(data.junction[,c("junctionLabel","SJ_type", "RTS_junction")]));
+    uniqJuncRTS.list[[i]] <- as.data.frame(unique(data.junction[,c("junctionLabel","SJ_type", "RTS_junction")]));
+
 
     FL_multisample_indices.list[[i]] = FL_multisample_indices
 
@@ -735,7 +738,7 @@ for (i in seq_along(class.files)) {
     #freqCat$ranking = order(freqCat$Freq,decreasing = T)
     table1 <- tableGrob(freqCat, rows = NULL, cols = c("Category","Isoforms, count"))
     # title1 <- textGrob("Transcript Classification\n", gp=gpar(fontface="italic", fontsize=17), vjust = -3.2)
-    title1 <- textGrob(paste0(sample.names[1], "\n"), gp=gpar(fontface="italic", fontsize=17), vjust = -3.2)
+    title1 <- textGrob(paste0(sample.names[i], "\n"), gp=gpar(fontface="italic", fontsize=17), vjust = -3.2)
     gt1.list[[i]] <- gTree(children=gList(table1, title1))
 
     # TABLE 2: Number of Novel vs Known Genes
@@ -747,7 +750,8 @@ for (i in seq_along(class.files)) {
     
     # TABLE 3: Junction Classification
     
-    uniq_sj_count <- nrow(uniqJunc.list[[i]])
+    # uniq_sj_count <- nrow(uniqJunc.list[[i]])
+    uniq_sj_count <- length(uniqJunc.list[[i]])
     
     freqCat <- as.data.frame(table(uniqJunc.list[[i]]$SJ_type))
     freqCat$Var1 <- gsub(" ", "", freqCat$Var1)
@@ -1787,8 +1791,10 @@ for (i in seq_along(class.files)) {
         data.junction.list[[i]]$canonical_known = as.factor(data.junction.list[[i]]$canonical_known)
         data.junction.list[[i]]$canonical_known = factor(data.junction.list[[i]]$canonical_known, levels=c("known_canonical_SJ", "known_non_canonical_SJ", "novel_canonical_SJ", "novel_non_canonical_SJ"),
                                                                               labels=c("Known\ncanonical ", "Known\nNon-canonical ", "Novel\ncanonical ", "Novel\nNon-canonical "), order=T) 
-        data.junction.list[[i]]$structural_category = data.class.list[[i]][data.junction.list[[i]]$isoform,"structural_category"]
+        ### next line is already done in the intial setup?
+        #data.junction.list[[i]]$structural_category = data.class.list[[i]][data.junction.list[[i]]$isoform,"structural_category"]
         ##    data.junction.list[[i]]$TSSrange =cut(data.junction.list[[i]]$transcript_coord, breaks = c(0, 40, 80, 120, 160, 200, 10000000), labels = c("0-40", "41-80", "81-120", "121-160", "161-200",">200"))
+
         
         p.list[[i]] <- ggplot(data.junction.list[[i]], aes(x=structural_category)) +
                        geom_bar(position="fill", aes(y = (..count..)/sum(..count..), fill=SJ_type), color="black",  size=0.3, width = 0.7) +
@@ -4470,7 +4476,7 @@ rm(p.list)
 #TSS ratio
 p.list = vector("list", length(class.files))
 for (i in seq_along(class.files)) {
-    data.ratio = rbind(data.refmatch.list[[i]][,c(6,47)], data.ISM.list[[i]][,c(6,47)])
+    data.ratio = rbind(data.refmatch.list[[i]][,c("structural_category", "ratio_TSS")], data.ISM.list[[i]][,c("structural_category", "ratio_TSS")])
     if (!all(is.na(data.ratio$ratio_TSS))) {
         require(scales)
         p.list[[i]] = ggplot(data.ratio, aes(x=ratio_TSS, fill=structural_category)) + 

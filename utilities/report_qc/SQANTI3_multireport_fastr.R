@@ -336,7 +336,7 @@ for (i in seq_along(class.files)) {
 
     rownames(data.class) <- data.class$isoform
 
-    data.class$sample_name = factor(sample.names[i])
+    # data.class$sample_name = factor(sample.names[i])
 
     data.class$structural_category = factor(data.class$structural_category,
                                             labels = xaxislabelsF1,
@@ -446,12 +446,30 @@ for (i in seq_along(class.files)) {
     data.Intergenic <- subset(data.class, (structural_category=="Intergenic" & exons>1))
     data.GenicIntron <- subset(data.class, (structural_category=="Genic\nIntron" & exons>1))
 
+    # data.FSMISM <- data.class[structural_category %in% c('FSM', 'ISM'), .(length, ref_length, ref_exons, exons, structural_category, subcategory, coding, STM, diff_to_TTS, diff_to_TSS, polyA_motif, polyA_motif_found, polyA_dist, within_CAGE_peak, dist_to_CAGE_peak, associated_transcript)]
+    # data.NICNNC <- data.class[structural_category %in% c("NIC", "NNC"), .(length, ref_length, ref_exons, exons, structural_category, subcategory, coding, STM, diff_to_TTS, diff_to_TSS, polyA_motif, polyA_motif_found, polyA_dist, within_CAGE_peak, dist_to_CAGE_peak, associated_transcript)]
+    # data.other <- data.class[structural_category %in% c("Genic\nGenomic",  "Antisense", "Fusion","Intergenic", "Genic\nIntron"), .(length, ref_length, ref_exons, exons, structural_category, subcategory, coding, STM, diff_to_TTS, diff_to_TSS, polyA_motif, polyA_motif_found, polyA_dist, within_CAGE_peak, dist_to_CAGE_peak, associated_transcript)]
+    # data.FSM <- data.class[(structural_category=="FSM" & exons>1), .(length, exons, structural_category, subcategory, coding, STM, diff_to_TTS, diff_to_TSS, polyA_motif, polyA_motif_found, within_CAGE_peak, dist_to_CAGE_peak, associated_transcript)]
+    # data.ISM <- data.class[(structural_category=="ISM" & exons>1), .(length, exons, structural_category, subcategory, coding, STM, diff_to_TTS, diff_to_TSS, polyA_motif, polyA_motif_found, within_CAGE_peak, dist_to_CAGE_peak, associated_transcript)]
+    # data.NNC <- data.class[(structural_category=="NNC" & exons>1), .(length, exons, structural_category, subcategory, coding, STM, diff_to_TTS, diff_to_TSS, polyA_motif, polyA_motif_found, within_CAGE_peak, dist_to_CAGE_peak, associated_transcript)]
+    # data.NIC <- data.class[(structural_category=="NIC" & exons>1), .(length, exons, structural_category, subcategory, coding, STM, diff_to_TTS, diff_to_TSS, polyA_motif, polyA_motif_found, within_CAGE_peak, dist_to_CAGE_peak, associated_transcript)]
+    # data.GenicGenomic <- data.class[(structural_category=="Genic\nGenomic" & exons>1 ), .(length, exons, structural_category, subcategory, coding, STM, diff_to_TTS, diff_to_TSS, polyA_motif, polyA_motif_found, within_CAGE_peak, dist_to_CAGE_peak, associated_transcript)]
+    # data.Antisense <- data.class[(structural_category=="Antisense" & exons>1 ), .(length, exons, structural_category, subcategory, coding, STM, diff_to_TTS, diff_to_TSS, polyA_motif, polyA_motif_found, within_CAGE_peak, dist_to_CAGE_peak, associated_transcript)]
+    # data.Fusion <- data.class[(structural_category=="Fusion" & exons>1 ), .(length, exons, structural_category, subcategory, coding, STM, diff_to_TTS, diff_to_TSS, polyA_motif, polyA_motif_found, within_CAGE_peak, dist_to_CAGE_peak, associated_transcript)]
+    # data.Intergenic <- data.class[(structural_category=="Intergenic" & exons>1 ), .(length, exons, structural_category, subcategory, coding, STM, diff_to_TTS, diff_to_TSS, polyA_motif, polyA_motif_found, within_CAGE_peak, dist_to_CAGE_peak, associated_transcript)]
+    # data.GenicIntron <- data.class[(structural_category=="Genic\nIntron" & exons>1 ), .(length, exons, structural_category, subcategory, coding, STM, diff_to_TTS, diff_to_TSS, polyA_motif, polyA_motif_found, within_CAGE_peak, dist_to_CAGE_peak, associated_transcript)]
+
+
     # subcategories data sets
     #"FSM"
-    data.alt3end <- subset(data.FSM, (subcategory=="Alternative 3'end"))
-    data.alt35end <- subset(data.FSM, (subcategory=="Alternative 3'5'end"))
-    data.alt5end <- subset(data.FSM, (subcategory=="Alternative 5'end"))
-    data.refmatch <- subset(data.FSM, (subcategory=="Reference match"))
+    # data.alt3end <- subset(data.FSM, (subcategory=="Alternative 3'end"))
+    # data.alt35end <- subset(data.FSM, (subcategory=="Alternative 3'5'end"))
+    # data.alt5end <- subset(data.FSM, (subcategory=="Alternative 5'end"))
+    # data.refmatch <- subset(data.FSM, (subcategory=="Reference match"))
+    data.alt3end <- data.FSM[(subcategory=="Alternative 3'end"), .(structural_category, diff_to_TTS, diff_to_TSS, polyA_motif, polyA_motif_found, within_CAGE_peak, dist_to_CAGE_peak)]
+    data.alt35end <- data.FSM[(subcategory=="Alternative 3'5'end"), .(structural_category, diff_to_TTS, diff_to_TSS, polyA_motif, polyA_motif_found, within_CAGE_peak, dist_to_CAGE_peak)]
+    data.alt5end <- data.FSM[(subcategory=="Alternative 5'end"), .(structural_category, diff_to_TTS, diff_to_TSS, polyA_motif, polyA_motif_found, within_CAGE_peak, dist_to_CAGE_peak)]
+    data.refmatch <- data.FSM[(subcategory=="Reference match"), .(structural_category, diff_to_TTS, diff_to_TSS, polyA_motif, polyA_motif_found, within_CAGE_peak, dist_to_CAGE_peak)]
     #"ISM"
     data.3fragment <- subset(data.ISM, (subcategory=="3' fragment"))
     data.int_fragment <- subset(data.ISM, (subcategory=="Internal fragment"))
@@ -907,12 +925,12 @@ binned_data_list <- map2(data.class.list, sample.names, compute_bins)
 combined_binned_data = bind_rows(binned_data_list)
 rm(binned_data_list)
 p.tmp <- ggplot(combined_binned_data, aes(x=bin, y=count, color=sample_name)) +
-          geom_line(size=1) +
-          scale_color_manual(values = sample.palette, name="Sample") +
-          labs(x="Transcript length", y="Normalized Count", title="Normalized Transcript Lengths Distribution by Sample") +
-          scale_y_continuous(expand=expansion(mult = c(0,0.1))) +
-          mytheme +
-          theme(legend.position="bottom", legend.title=element_blank())
+         geom_line(size=1) +
+         scale_color_manual(values = sample.palette, name="Sample") +
+         labs(x="Transcript length", y="Normalized Count", title="Normalized Transcript Lengths Distribution by Sample") +
+         scale_y_continuous(expand=expansion(mult = c(0,0.1))) +
+         mytheme +
+         theme(legend.position="bottom", legend.title=element_blank())
 
 p.tmp2 <- ggplot(combined_binned_data, aes(x=bin, y=normalized_count, color=sample_name)) +
           geom_line(size=1) +
@@ -924,7 +942,6 @@ p.tmp2 <- ggplot(combined_binned_data, aes(x=bin, y=normalized_count, color=samp
 
 grid.arrange(p.tmp, p.tmp2, ncol=2)
 
-# x_limit <- quantile(concat.data.class$length, 0.99)
 x_limit = max(sapply(data.class.list, function(dt) quantile(dt$length, 0.99)))
 
 p.tmp <- p.tmp + 
@@ -937,9 +954,114 @@ p.tmp2 <- p.tmp2 +
 grid.arrange(p.tmp, p.tmp2, ncol=2)
 rm(p.tmp)
 rm(p.tmp2)
-# rm(p.tmp3)
-# rm(concat.data.class)
 rm(combined_binned_data)
+
+
+
+# # p.length.cat: length of isoforms, by category
+# p.list = vector("list", length(class.files))
+# for (i in seq_along(class.files)) {
+#     p.list[[i]] <- ggplot(data.class.list[[i]], aes(x=length, color=structural_category)) +
+#                    geom_freqpoly(binwidth=100, size=1) +
+#                    scale_color_manual(values = cat.palette, name="Structural Category") +
+#                    labs(x="Transcript length", y="Count", title=sample.names[i]) +
+#                    scale_y_continuous(expand=expansion(mult = c(0,0.1))) +
+#                    mytheme+
+#                    theme(legend.position="bottom", legend.title=element_blank())
+# }
+# page_title = textGrob("Transcript Lengths Distribution by Structural Category", gp=gpar(fontface="italic", fontsize=17))
+# organize_in_grid_with_title(page_title, p.list)
+# rm(p.list)
+
+
+# compute_bins_by_category <- function(data_tbl, sample_name, bin_width = 100) {
+#     breaks <- seq(0 - bin_width/2, 
+#                   to = ceiling((max(data_tbl$length) - bin_width/2) / bin_width) * bin_width + bin_width/2, 
+#                   by = bin_width)
+
+#     all_bins <- data.frame(bin = breaks[-length(breaks)] + bin_width/2)  # Take mid points of the breaks for bins
+
+#     binned_data <- data_tbl %>%
+#                    mutate(bin = cut(length, 
+#                           breaks=breaks, 
+#                           include.lowest=TRUE, 
+#                           labels=FALSE) * bin_width) %>%
+#                    group_by(structural_category, bins) %>%
+#                    summarize(count=n()) %>%
+#                    ungroup()
+
+# #    binned_data <- data.frame(bin = bins, length = data_tbl$length) %>%
+# #                                  group_by(bin) %>%
+# #                                  summarize(count=n()) %>%
+# #                                  ungroup()
+
+
+
+#     binned_data <- binned_data %>%
+#                    left_join(all_bins, by = c("bin" = "bins")) %>%
+#                    mutate(count = ifelse(is.na(count), 0, count))
+
+#     total_count <- nrow(data_tbl)
+#     binned_data$normalized_count <- binned_data$count / total_count
+#     binned_data$sample_name <- sample_name
+    
+#     return(binned_data)
+# }
+
+# result <- map2(data.class.list, sample.names, compute_bins_by_category)
+
+compute_bins <- function(data_tbl, sample_name, bin_width = 100) {
+    breaks <- seq(0 - bin_width/2, 
+                  to = ceiling((max(data_tbl$length) - bin_width/2) / bin_width) * bin_width + bin_width/2, 
+                  by = bin_width)
+
+    bins <- cut(data_tbl$length, 
+                breaks=breaks, 
+                include.lowest=TRUE, 
+                labels=FALSE) * bin_width
+
+    binned_data <- data.frame(bins = bins, length = data_tbl$length, structural_category = data_tbl$structural_category) %>%
+                   group_by(bins, structural_category) %>%
+                   summarize(count=n(), .groups = 'drop') %>%
+                   ungroup()
+
+    all_bins <- data.frame(bins = breaks[-length(breaks)] + bin_width/2)  # Take mid points of the breaks for bins
+
+    # Combine all possible combinations of bins and structural categories
+    complete_data <- expand.grid(bins = all_bins$bins, structural_category = unique(data_tbl$structural_category))
+
+    binned_data <- complete_data %>%
+                   left_join(binned_data, by = c("bins", "structural_category")) %>%
+                   mutate(count = ifelse(is.na(count), 0, count))
+
+    total_count <- nrow(data_tbl)
+    binned_data$normalized_count <- binned_data$count / total_count
+    binned_data$sample_name <- sample_name
+    
+    return(binned_data)
+}
+
+results <- bind_rows(map2(data.class.list, sample.names, compute_bins))
+
+
+y_limit = max(results$normalized_count)
+for (subcat in unique(results$structural_category)) {
+    p.tmp = ggplot(results[results$structural_category == subcat, ], aes(x=bins, y=normalized_count, color=sample_name)) +
+            geom_line(size=1) +
+            scale_color_manual(values = sample.palette, name="Sample") +
+            labs(x="Transcript length", y="Normalized Count", title=paste0("Normalized Transcript Lengths Distribution by Sample for ", subcat)) +
+            scale_y_continuous(expand=expansion(mult = c(0,0.1))) +
+            mytheme +
+            theme(legend.position="bottom", legend.title=element_blank())
+    p.tmp2 = p.tmp + coord_cartesian(ylim = c(0, y_limit))
+    p.tmp3 = p.tmp + coord_cartesian(xlim = c(0, x_limit))
+    p.tmp4 = p.tmp + coord_cartesian(xlim = c(0, x_limit), ylim = c(0, y_limit))
+    grid.arrange(p.tmp, p.tmp2, p.tmp3, p.tmp4, ncol=2)
+}
+
+
+
+
 
 
 
@@ -957,6 +1079,10 @@ for (i in seq_along(class.files)) {
 page_title = textGrob("Transcript Lengths Distribution by Structural Category", gp=gpar(fontface="italic", fontsize=17))
 organize_in_grid_with_title(page_title, p.list)
 rm(p.list)
+
+
+
+
 
 
 # p.length.exon: length of isoforms, mono- vs mult-exon/ufrc/conesa/fpardopalacios/SQANTI_QDE/SQANTI3/melanoma_example/melanoma_chr13_tappAS_annot_from_SQANTI3.gff3
@@ -1020,75 +1146,293 @@ grid.arrange(s)
 
 
 #**** PLOT 1: Structural Classification
-p.list = vector("list", length(class.files))
-for (i in seq_along(class.files)) {
-    p.list[[i]] <- ggplot(data=data.class.list[[i]], aes(x=structural_category)) +
-                   geom_bar(aes(y = (..count..)/sum(..count..)*100, alpha=coding, fill=structural_category), color="black", size=0.3, width=0.7) +
-                   #geom_text(aes(y = ((..count..)/sum(..count..)), label = scales::percent((..count..)/sum(..count..))), stat = "count", vjust = -0.25)  +
-                   scale_x_discrete(drop=FALSE) +
-                   scale_alpha_manual(values=c(1,0.3),
-                                      name = "Coding prediction",
-                                      labels = legendLabelF1)+
-                   xlab("") +
-                   ylab("Transcripts, %") +
-                   mytheme +
-                   geom_blank(aes(y=((..count..)/sum(..count..))), stat = "count") +
-                   theme(axis.text.x = element_text(angle = 45)) +
-                   scale_fill_manual(values = cat.palette, guide='none') +
-                   ggtitle(paste0(sample.names[i], "\n\n" )) +
-                   theme(axis.title.x=element_blank()) +  theme(axis.text.x  = element_text(margin=ggplot2::margin(17,0,0,0), size=12)) +
-                   scale_y_continuous(expand=expansion(mult = c(0,0.1))) +
-                   theme(legend.justification=c(1,1), legend.position=c(1,1))
-}
-page_title = textGrob("Isoform Distribution Across Structural Categories", gp=gpar(fontface="italic", fontsize=17))
-organize_in_grid_with_title(page_title, p.list)
-rm(p.list)
+# p.list = vector("list", length(class.files))
+# for (i in seq_along(class.files)) {
+#     p.list[[i]] <- ggplot(data=data.class.list[[i]], aes(x=structural_category)) +
+#                    geom_bar(aes(y = (..count..)/sum(..count..)*100, alpha=coding, fill=structural_category), color="black", size=0.3, width=0.7) +
+#                    #geom_text(aes(y = ((..count..)/sum(..count..)), label = scales::percent((..count..)/sum(..count..))), stat = "count", vjust = -0.25)  +
+#                    scale_x_discrete(drop=FALSE) +
+#                    scale_alpha_manual(values=c(1,0.3),
+#                                       name = "Coding prediction",
+#                                       labels = legendLabelF1)+
+#                    xlab("") +
+#                    ylab("Transcripts, %") +
+#                    mytheme +
+#                    geom_blank(aes(y=((..count..)/sum(..count..))), stat = "count") +
+#                    theme(axis.text.x = element_text(angle = 45)) +
+#                    scale_fill_manual(values = cat.palette, guide='none') +
+#                    ggtitle(paste0(sample.names[i], "\n\n" )) +
+#                    theme(axis.title.x=element_blank()) +  theme(axis.text.x  = element_text(margin=ggplot2::margin(17,0,0,0), size=12)) +
+#                    scale_y_continuous(expand=expansion(mult = c(0,0.1))) +
+#                    theme(legend.justification=c(1,1), legend.position=c(1,1))
+# }
+# page_title = textGrob("Isoform Distribution Across Structural Categories", gp=gpar(fontface="italic", fontsize=17))
+# organize_in_grid_with_title(page_title, p.list)
+# rm(p.list)
+
+
+# df.tmp.list = vector("list", length(class.files))
+# for (i in seq_along(class.files)) {
+#     df.tmp.list[[i]] <- data.class.list[[i]] %>% group_by(structural_category) %>% summarize(sample=sample.names[[i]], n=n()) %>% mutate(n = n / sum(n) * 100)
+# }
+# df.tmp <- bind_rows(df.tmp.list)
 
 
 
-p1.s.titles = list("Isoform Distribution Across FSM\n\n",
-                   "Isoform Distribution Across ISM\n\n",
-                   "Isoform Distribution Across NNC\n\n",
-                   "Isoform Distribution Across NIC\n\n",
-                   "Isoform Distribution Across Genic Genomic\n\n",
-                   "Isoform Distribution Across Antisense\n\n",
-                   "Isoform Distribution Across Fusion\n\n",
-                   "Isoform Distribution Across Intergenic\n\n",
-                   "Isoform Distribution Across Genic Intron\n\n")
+#df.tmp = bind_rows(mapply(function(dt, sample_name) {
+#    summary_dt = dt %>% group_by(structural_category) %>% summarize(sample=sample_name, n=n()) %>% mutate(n = n / sum(n) * 100)
+#    return(summary_dt)
+#}, data.class.list, sample.names, SIMPLIFY = FALSE))
 
-categories.list=list(data.FSM.list, data.ISM.list, data.NNC.list, data.NIC.list, data.GenicGenomic.list, data.Antisense.list, data.Fusion.list, data.Intergenic.list, data.GenicIntron.list)
 
-p.list = vector("list", length(class.files))
-for(j in 1:length(categories.list)) {
-    c <- categories.list[[j]]
-    for (i in seq_along(class.files)) {
-        if (!(dim(c[[i]])[1]==0)) {
-            p.list[[i]] <- ggplot(data=c[[i]], aes(x=subcategory)) +
-                           geom_bar(aes(y = (..count..)/sum(..count..)*100, alpha=coding, fill=subcategory), color="black", size=0.3, width=0.7) +
-                           scale_x_discrete(drop=TRUE) +
-                           scale_alpha_manual(values=c(1,0.3), name = "Coding prediction", labels = legendLabelF1)+
-                           ylab("Transcripts, %") +
-                           mytheme +
-                           geom_blank(aes(y=((..count..)/sum(..count..))), stat = "count") +
-                           theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-                           scale_fill_manual(values = subcat.palette, guide='none') +
-                           ggtitle(paste0(sample.names[i], "\n\n"))+
-                           scale_y_continuous(expand=expansion(mult = c(0,0.1))) +
-                           theme(axis.title.x=element_blank())  
-        }
+# p.tmp = ggplot(data=df.tmp, aes(x=structural_category)) +
+#         geom_bar(aes(y=n, fill=structural_category, alpha=coding_prop), stat='identity', color="black", size=0.3, width=0.7, position="dodge2") +
+#         geom_text(aes(y=n, label=sample, angle=90), hjust=-0.1, position= position_dodge2(width=0.7)) +
+#         scale_x_discrete(drop=FALSE) +
+#         scale_alpha_manual(values=c(1,0.3),
+#                            name = "Coding prediction",
+#                            labels = legendLabelF1)+
+#         xlab("") +
+#         ylab("Transcripts, %") +
+#         mytheme +
+#         # geom_blank(aes(y=n), stat = "identity") +
+#         theme(axis.text.x = element_text(angle = 45)) +
+#         scale_fill_manual(values = cat.palette, guide='none') +
+#         ggtitle(paste0("Isoform Distribution Across Structural Categories and Samples", "\n\n" )) +
+#         theme(axis.title.x=element_blank()) +  theme(axis.text.x  = element_text(margin=ggplot2::margin(17,0,0,0), size=12)) +
+#         scale_y_continuous(expand=expansion(mult = c(0,0.1))) +
+#         theme(legend.justification=c(1,1), legend.position=c(1,1))
+# 
+# p.tmp2 = ggplot(data=df.tmp, aes(x=structural_category)) +
+#          geom_bar(aes(y=n, fill=sample), stat='identity', color="black", size=0.3, width=0.7, position="dodge2") +
+#          scale_x_discrete(drop=FALSE) +
+#          xlab("") +
+#          ylab("Transcripts, %") +
+#          mytheme +
+#          # geom_blank(aes(y=n), stat = "identity") + # might not be needed
+#          theme(axis.text.x = element_text(angle = 45)) +
+#          ggtitle(paste0("Isoform Distribution Across Structural Categories and Samples", "\n\n" )) +
+#          theme(axis.title.x=element_blank()) +  
+#          theme(axis.text.x  = element_text(margin=ggplot2::margin(17,0,0,0), size=12)) +
+#          scale_y_continuous(expand=expansion(mult = c(0,0.1))) +
+#          theme(legend.justification=c(1,1), legend.position=c(1,1))
+# 
+# grid.arrange(p.tmp, p.tmp2, ncol=2)
+# rm(p.tmp)
+# rm(p.tmp2)
+# rm(df.tmp)
+# # rm(df.tmp.list)
+
+
+
+df.tmp = bind_rows(mapply(function(dt, sample_name) {
+    summary_dt = dt %>% 
+      group_by(structural_category) %>% 
+      summarize(sample = sample_name, 
+                n = n(),
+                coding_prop = sum(coding == "Coding")) %>% 
+      mutate(coding_prop = coding_prop / sum(n) * 100,
+             n = n / sum(n) * 100
+      )
+    return(summary_dt)
+}, data.class.list, sample.names, SIMPLIFY = FALSE))
+
+# df.tmp$coding_prop = 0.3* df.tmp$n
+
+
+p.tmp = ggplot(data = df.tmp, aes(x = structural_category, group = sample)) +
+        # Full height as lower alpha
+        geom_bar(aes(y = n, fill = structural_category, alpha = 0.3), stat = 'identity', position = "dodge", width = 0.7, color = "black", size = 0.3) +
+        # Overlap the coding proportion with full alpha
+        geom_bar(aes(y = coding_prop, fill = structural_category, alpha = 1), stat = 'identity', position = "dodge", width = 0.7, color = "black", size = 0.3) +
+        geom_text(aes(y = n, label = sample), position = position_dodge(width = 0.7), angle = 90, hjust = -0.1) +
+        scale_x_discrete(drop = FALSE) +
+        scale_fill_manual(values = cat.palette) +
+        scale_alpha_identity() +
+        ylab("Transcripts, %") +
+        mytheme +
+        theme(axis.text.x = element_text(angle = 45)) +
+        ggtitle(paste0("Isoform Distribution Across Structural Categories and Samples", "\n\n")) +
+        theme(axis.title.x = element_blank()) +
+        theme(axis.text.x  = element_text(margin = ggplot2::margin(17, 0, 0, 0), size = 12)) +
+        scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+        theme(legend.justification = c(1, 1), legend.position = c(1, 1))
+
+p.tmp2 = ggplot(data = df.tmp, aes(x = structural_category, group = sample)) +
+        # Full height as lower alpha
+        geom_bar(aes(y = n, fill = sample, alpha = 0.3), stat = 'identity', position = "dodge", width = 0.7, color = "black", size = 0.3) +
+        # Overlap the coding proportion with full alpha
+        geom_bar(aes(y = coding_prop, fill = sample, alpha = 1), stat = 'identity', position = "dodge", width = 0.7, color = "black", size = 0.3) +
+        geom_text(aes(y = n, label = sample), position = position_dodge(width = 0.7), angle = 90, hjust = -0.1) +
+        scale_x_discrete(drop = FALSE) +
+        scale_alpha_identity() +
+        ylab("Transcripts, %") +
+        mytheme +
+        theme(axis.text.x = element_text(angle = 45)) +
+        ggtitle(paste0("Isoform Distribution Across Structural Categories and Samples", "\n\n")) +
+        theme(axis.title.x = element_blank()) +
+        theme(axis.text.x  = element_text(margin = ggplot2::margin(17, 0, 0, 0), size = 12)) +
+        scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+        theme(legend.justification = c(1, 1), legend.position = c(1, 1))
+
+grid.arrange(p.tmp, p.tmp2, ncol=2)
+rm(p.tmp)
+rm(p.tmp2)
+rm(df.tmp)
+
+
+
+
+
+
+
+# p1.s.titles = list("Isoform Distribution Across FSM\n\n",
+#                    "Isoform Distribution Across ISM\n\n",
+#                    "Isoform Distribution Across NNC\n\n",
+#                    "Isoform Distribution Across NIC\n\n",
+#                    "Isoform Distribution Across Genic Genomic\n\n",
+#                    "Isoform Distribution Across Antisense\n\n",
+#                    "Isoform Distribution Across Fusion\n\n",
+#                    "Isoform Distribution Across Intergenic\n\n",
+#                    "Isoform Distribution Across Genic Intron\n\n")
+# 
+# categories.list=list(data.FSM.list, data.ISM.list, data.NNC.list, data.NIC.list, data.GenicGenomic.list, data.Antisense.list, data.Fusion.list, data.Intergenic.list, data.GenicIntron.list)
+# 
+# p.list = vector("list", length(class.files))
+# for(j in 1:length(categories.list)) {
+#     c <- categories.list[[j]]
+#     for (i in seq_along(class.files)) {
+#         if (!(dim(c[[i]])[1]==0)) {
+#             p.list[[i]] <- ggplot(data=c[[i]], aes(x=subcategory)) +
+#                            geom_bar(aes(y = (..count..)/sum(..count..)*100, alpha=coding, fill=subcategory), color="black", size=0.3, width=0.7) +
+#                            scale_x_discrete(drop=TRUE) +
+#                            scale_alpha_manual(values=c(1,0.3), name = "Coding prediction", labels = legendLabelF1)+
+#                            ylab("Transcripts, %") +
+#                            mytheme +
+#                            geom_blank(aes(y=((..count..)/sum(..count..))), stat = "count") +
+#                            theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+#                            scale_fill_manual(values = subcat.palette, guide='none') +
+#                            ggtitle(paste0(sample.names[i], "\n\n"))+
+#                            scale_y_continuous(expand=expansion(mult = c(0,0.1))) +
+#                            theme(axis.title.x=element_blank())  
+#         }
+#     }
+#     if (!all(sapply(p.list, is.null))) {
+#         page_title = textGrob(p1.s.titles[j] , gp=gpar(fontface="italic", fontsize=17))
+#         organize_in_grid_with_title(page_title, p.list)
+#     }
+# }
+# rm(categories.list)
+# rm(data.GenicGenomic.list)
+# rm(data.Antisense.list)
+# rm(data.Fusion.list)
+# rm(data.Intergenic.list)
+# rm(data.GenicIntron.list)
+# rm(p.list)
+
+# for (current_category in c("FSM", "ISM", "NIC", "NNC", "Genic\nGenomic", "Antisense", "Fusion", "Intergenic", "Genic\nIntron")) {
+#     df.tmp = bind_rows( mapply(function(dt, sample_name) {
+#                             subset_dt <- dt[(structural_category == current_category & exons > 1), .(subcategory)]
+#                             summary_dt = subset_dt %>% 
+#                                 group_by(subcategory) %>% 
+#                                 summarize(sample = sample_name,
+#                                           n = n(),
+#                                           coding_prop = sum(coding == "Coding")) %>% 
+#                                 mutate(coding_prop = coding_prop / sum(n) * 100,
+#                                        n = n / sum(n) * 100)
+#                             return(summary_dt)
+#                         }, data.class.list, sample.names, SIMPLIFY = FALSE))
+# 
+#     if (dim(df.tmp)[1] > 1) {
+#         p.tmp <- ggplot(data=df.tmp, aes(x=subcategory)) +
+#                         geom_bar(aes(y = n, fill=subcategory), stat="identity", color="black", size=0.3, width=0.7, position="dodge2") +
+#                         geom_text(aes(y=n, label=sample, angle=90), hjust=-0.1, position=position_dodge2(width=0.7)) +
+#                         scale_x_discrete(drop=TRUE) +
+#                         # scale_alpha_manual(values=c(1,0.3), name = "Coding prediction", labels = legendLabelF1)+
+#                         ylab("Transcripts, %") +
+#                         mytheme +
+#                         # geom_blank(aes(y=n), stat = "identity") +
+#                         theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+#                         scale_fill_manual(values = subcat.palette, guide='none') +
+#                         ggtitle(paste0("Isoform Distribution Across ",  gsub("\n", " ", current_category), " and Samples", "\n\n"))+
+#                         scale_y_continuous(expand=expansion(mult = c(0,0.1))) +
+#                         theme(axis.title.x=element_blank())
+# 
+#         # maybe need to adjust where the legend is shown
+#         p.tmp2 <- ggplot(data=df.tmp, aes(x=subcategory)) +
+#                         geom_bar(aes(y = n, fill=sample), stat="identity", color="black", size=0.3, width=0.7, position="dodge2") +
+#                         scale_x_discrete(drop=TRUE) +
+#                         # scale_alpha_manual(values=c(1,0.3), name = "Coding prediction", labels = legendLabelF1)+
+#                         ylab("Transcripts, %") +
+#                         mytheme +
+#                         # geom_blank(aes(y=n), stat = "identity") +
+#                         theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+#                         # scale_fill_manual(values = subcat.palette), guide='none') +
+#                         ggtitle(paste0("Isoform Distribution Across ",  gsub("\n", " ", current_category), " and Samples", "\n\n"))+
+#                         scale_y_continuous(expand=expansion(mult = c(0,0.1))) +
+#                         theme(axis.title.x=element_blank())
+#         grid.arrange(p.tmp, p.tmp2, ncol=2)
+#         rm(p.tmp)
+#         rm(p.tmp2)
+#     }
+#     rm(df.tmp)
+# }
+
+
+for (current_category in c("FSM", "ISM", "NIC", "NNC", "Genic\nGenomic", "Antisense", "Fusion", "Intergenic", "Genic\nIntron")) {
+    df.tmp = bind_rows( mapply(function(dt, sample_name) {
+                            subset_dt <- dt[(structural_category == current_category & exons > 1), .(subcategory, coding)]
+                            summary_dt = subset_dt %>% 
+                                group_by(subcategory) %>% 
+                                summarize(sample = sample_name,
+                                          n = n(),
+                                          coding_prop = sum(coding == "Coding")) %>% 
+                                mutate(coding_prop = coding_prop / sum(n) * 100,
+                                       n = n / sum(n) * 100)
+                            return(summary_dt)
+                        }, data.class.list, sample.names, SIMPLIFY = FALSE))
+
+    if (dim(df.tmp)[1] > 1) {
+        p.tmp <- ggplot(data=df.tmp, aes(x = subcategory, group = sample)) +
+                        # Full height as lower alpha
+                        geom_bar(aes(y = n, fill = subcategory, alpha = 0.3), stat = 'identity', position = "dodge", width = 0.7, color = "black", size = 0.3) +
+                        # Overlap the coding proportion with full alpha
+                        geom_bar(aes(y = coding_prop, fill = subcategory, alpha = 1), stat = 'identity', position = "dodge", width = 0.7, color = "black", size = 0.3) +
+                        geom_text(aes(y=n, label=sample, angle=90), hjust=-0.1, position=position_dodge(width=0.7)) +
+                        scale_x_discrete(drop=TRUE) +
+                        scale_alpha_identity() +
+                        # scale_alpha_manual(values=c(1,0.3), name = "Coding prediction", labels = legendLabelF1)+
+                        ylab("Transcripts, %") +
+                        mytheme +
+                        # geom_blank(aes(y=n), stat = "identity") +
+                        theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+                        scale_fill_manual(values = subcat.palette) +
+                        ggtitle(paste0("Isoform Distribution Across ",  gsub("\n", " ", current_category), " and Samples", "\n\n"))+
+                        scale_y_continuous(expand=expansion(mult = c(0,0.1))) +
+                        theme(axis.title.x=element_blank())
+
+        # maybe need to adjust where the legend is shown
+        p.tmp2 <- ggplot(data=df.tmp, aes(x = subcategory, groupe = sample)) +
+                        geom_bar(aes(y = n, fill = sample, alpha = 0.3), stat="identity", color="black", size=0.3, width=0.7, position="dodge") +
+                        geom_bar(aes(y = coding_prop, fill = sample, alpha = 1), stat = 'identity', position = "dodge", width = 0.7, color = "black", size = 0.3) +
+                        scale_x_discrete(drop=TRUE) +
+                        scale_alpha_identity() +
+                        # scale_alpha_manual(values=c(1,0.3), name = "Coding prediction", labels = legendLabelF1)+
+                        ylab("Transcripts, %") +
+                        mytheme +
+                        # geom_blank(aes(y=n), stat = "identity") +
+                        theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+                        # scale_fill_manual(values = subcat.palette), guide='none') +
+                        ggtitle(paste0("Isoform Distribution Across ",  gsub("\n", " ", current_category), " and Samples", "\n\n"))+
+                        scale_y_continuous(expand=expansion(mult = c(0,0.1))) +
+                        theme(axis.title.x=element_blank())
+        grid.arrange(p.tmp, p.tmp2, ncol=2)
+        rm(p.tmp)
+        rm(p.tmp2)
     }
-    if (!all(sapply(p.list, is.null))) {
-        page_title = textGrob(p1.s.titles[j] , gp=gpar(fontface="italic", fontsize=17))
-        organize_in_grid_with_title(page_title, p.list)
-    }
+    rm(df.tmp)
 }
-rm(categories.list)
-rm(data.GenicGenomic.list)
-rm(data.Antisense.list)
-rm(data.Fusion.list)
-rm(data.Intergenic.list)
-rm(data.GenicIntron.list)
-rm(p.list)
+
 
 
 #****  PLOT 4: Transcript lengths by category
@@ -2177,85 +2521,6 @@ p21.stitles.FSM = list(textGrob("Distance to annotated Transcription Termination
                        textGrob("Distance to annotated Transcription Termination Site (TTS)\nFSM Alternative 3'5'End", gp=gpar(fontface="italic", fontsize=17)),
                        textGrob("Distance to annotated Transcription Termination Site (TTS)\nFSM Alternative 5'End", gp=gpar(fontface="italic", fontsize=17)),
                        textGrob("Distance to annotated Transcription Termination Site (TTS)\nFSM Reference Match", gp=gpar(fontface="italic", fontsize=17)))
-# p.list = vector("list", length(p21.stitles.FSM))
-# p.list2 = vector("list", length(p21.stitles.FSM))
-# for (j in seq_along(p21.stitles.FSM)) {
-#     p.list[[j]] = vector("list", length(class.files))
-#     p.list2[[j]] = vector("list", length(class.files))
-# }
-# for (i in seq_along(class.files)) {
-#     if (nrow(data.FSM.list[[i]]) > 0) {
-#         if (!all(is.na(data.FSM.list[[i]]$polyA_motif))) {
-#             for(j in 1:length(subcategories.FSM.list[[i]])) {
-#                 c <- data.frame(subcategories.FSM.list[[i]][[j]])
-#                 if (!(dim(c))[1]==0 & !all(is.na(c$polyA_motif))) {
-#                     diff_max <- max(max(abs(c$diff_to_TSS)), max(abs(c$diff_to_TTS)));
-#                     diff_breaks <- c(-(diff_max+1), seq(-1000, 1000, by = 100), (diff_max+1));
-#                     c$diffTTSCat = cut(-(c$diff_to_TTS), breaks = diff_breaks);
-#                     max_height <- max(table(c$diffTTSCat));
-#                     max_height <- (max_height %/% 10+1) * 10;
-#                     #p.list[[j]][[i]] <- ggplot(data=c, aes(x=diffTTSCat)) +
-#                     #                    geom_bar(fill=myPalette[4], color="black", size=0.3, aes( alpha=eval(parse(text = alpha_TTS.list[[i]])))) +
-#                     #                    scale_y_continuous(expand = c(0,0), limits = c(0,max_height))+
-#                     #                    mytheme + labs(alpha = alpha_TTS_labs.list[[i]]) +
-#                     #                    scale_x_discrete(drop=F, labels=breaks_labels) +
-#                     #                    ylab("Transcripts, count")+
-#                     #                    xlab("Distance to Annotated Transcription Termination Site (TTS), bp")+
-#                     #                    labs(title=sample.names[[i]],
-#                     #                         subtitle="Negative values indicate upstream of annotated termination site\n\n") +
-#                     #                    theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
-#                     #                    theme(legend.justification=c(1,1), legend.position=c(1,1))
-#                     #p.list2[[j]][[i]] <- ggplot(data=c, aes(x=diffTTSCat)) +
-#                     #                     geom_bar(aes(alpha=eval(parse(text = alpha_TTS.list[[i]])), y = (..count..)/sum(..count..)), fill=myPalette[4], color="black", size=0.3)+
-#                     #                     scale_y_continuous(breaks=c(0.0,0.25,0.50,0.75,1),
-#                     #                                        labels=c("0","25","50","75","100"), expand=c(0,0)) +
-#                     #                     scale_x_discrete(drop=F, labels=breaks_labels) +
-#                     #                     mytheme + labs(alpha = alpha_TTS_labs.list[[i]]) +
-#                     #                     ylab("Transcripts, %")+
-#                     #                     xlab("Distance to Annotated Transcription Termination Site (TTS), bp")+
-#                     #                     labs(title=sample.names[[i]],
-#                     #                          subtitle="Negative values indicate upstream of annotated termination site\n\n") +
-#                     #                     theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
-#                     #                     theme(legend.justification=c(1,1), legend.position=c(1,1))
-#                     p.list[[j]][[i]] <- ggplot(data=c, aes(x=diffTTSCat)) +
-#                                         geom_bar(fill=myPalette[4], color="black", size=0.3, aes( alpha=polyA_motif_found)) +
-#                                         scale_y_continuous(expand = c(0,0), limits = c(0,max_height))+
-#                                         mytheme + labs(alpha = alpha_TTS_labs.list[[i]]) +
-#                                         scale_x_discrete(drop=F, labels=breaks_labels) +
-#                                         ylab("Transcripts, count")+
-#                                         xlab("Distance to Annotated Transcription Termination Site (TTS), bp")+
-#                                         labs(title=sample.names[[i]],
-#                                              subtitle="Negative values indicate upstream of annotated termination site\n\n") +
-#                                         theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
-#                                         theme(legend.justification=c(1,1), legend.position=c(1,1))
-#                     p.list2[[j]][[i]] <- ggplot(data=c, aes(x=diffTTSCat)) +
-#                                          geom_bar(aes(alpha=polyA_motif_found, y = (..count..)/sum(..count..)), fill=myPalette[4], color="black", size=0.3)+
-#                                          scale_y_continuous(breaks=c(0.0,0.25,0.50,0.75,1),
-#                                                             labels=c("0","25","50","75","100"), expand=c(0,0)) +
-#                                          scale_x_discrete(drop=F, labels=breaks_labels) +
-#                                          mytheme + labs(alpha = alpha_TTS_labs.list[[i]]) +
-#                                          ylab("Transcripts, %")+
-#                                          xlab("Distance to Annotated Transcription Termination Site (TTS), bp")+
-#                                          labs(title=sample.names[[i]],
-#                                               subtitle="Negative values indicate upstream of annotated termination site\n\n") +
-#                                          theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
-#                                          theme(legend.justification=c(1,1), legend.position=c(1,1))
-#                 }
-#             }
-#         }
-#     }
-# }
-# if (!all(sapply(unlist(p.list), is.null))) {
-#     for (j in seq_along(p21.stitles.FSM)) {
-#         organize_in_grid_with_title(p21.stitles.FSM[[j]], p.list[[j]])
-#         organize_in_grid_with_title(p21.stitles.FSM[[j]], p.list2[[j]])
-#     }
-# }
-# rm(p.list)
-# rm(p.list2)
-
-
-
 
 for (j in seq_along(p21.stitles.FSM)) {
     p.list = vector("list", length(class.files))
@@ -2314,60 +2579,6 @@ p21.stitles.ISM = list(textGrob("Distance to Annotated Polyadenylation Site for 
                        textGrob("Distance to Annotated Polyadenylation Site for ISM\nInternal Fragment", gp=gpar(fontface="italic", fontsize=17)),
                        textGrob("Distance to Annotated Polyadenylation Site for ISM\nA5' Fragment", gp=gpar(fontface="italic", fontsize=17)),
                        textGrob("Distance to Annotated Polyadenylation Site for ISM\nIntron Retention", gp=gpar(fontface="italic", fontsize=17)))
-# p.list = vector("list", length(p21.stitles.ISM))
-# p.list2 = vector("list", length(p21.stitles.ISM))
-# for (j in seq_along(p21.stitles.ISM)) {
-#     p.list[[j]] = vector("list", length(class.files))
-#     p.list2[[j]] = vector("list", length(class.files))
-# }
-# for (i in seq_along(class.files)) {
-#     if (nrow(data.ISM.list[[i]]) > 0) {
-#         for (j in 1:length(subcategories.ISM.list[[i]])) {
-#             c <- data.frame(subcategories.ISM.list[[i]][[j]])
-#             if (!(dim(c))[1]==0 & !all(is.na(c$polyA_motif))) {
-#                 diff_max <- max(max(abs(c$diff_to_TSS)), max(abs(c$diff_to_TTS)));
-#                 diff_breaks <- c(-(diff_max+1), seq(-5000, 5000, by = 500), diff_max+1);
-#                 c$diffTTSCat = cut(-(c$diff_to_TTS), breaks = diff_breaks);
-#                 max_height <-  max(table(c$diffTTSCat));
-#                 max_height <- (max_height %/% 10+1) * 10;
-#                 p.list[[j]][[i]] <- ggplot(data=c, aes(x=diffTTSCat)) +
-#                                     geom_bar(fill=myPalette[4], color="black", size=0.3, aes( alpha= !is.na(polyA_motif))) +
-#                                     scale_y_continuous(expand = c(0,0), limits = c(0,max_height))+
-#                                     scale_x_discrete(drop=F, labels=breaks_labels) +
-#                                     mytheme + labs(alpha = "polyA motif found") +
-#                                     ylab("Transcripts, count") +
-#                                     xlab("Distance to annotated polyadenylation site, bp") +
-#                                     labs(title=sample.names[[i]],
-#                                          subtitle="Negative values indicate upstream of annotated polyA site\n\n") +
-#                                     theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
-#                                     theme(legend.justification=c(1,1), legend.position=c(1,1))
-#                 p.list2[[j]][[i]] <- ggplot(data=c, aes(x=diffTTSCat)) +
-#                                      geom_bar(aes(alpha= !is.na(polyA_motif), y = (..count..)/sum(..count..)), fill=myPalette[4], color="black", size=0.3) +
-#                                      scale_y_continuous(breaks=c(0.0,0.25,0.50,0.75,1),
-#                                                         labels=c("0","25","50","75","100"), expand = c(0,0)) +
-#                                      scale_x_discrete(drop=F, labels=breaks_labels) +
-#                                      mytheme + labs(alpha = "polyA motif found") +
-#                                      ylab("Transcripts, %") +
-#                                      xlab("Distance to annotated polyadenylation site, bp") +
-#                                      labs(title=sample.names[[i]],
-#                                           subtitle="Negative values indicate upstream of annotated polyA site\n\n") +
-#                                      theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
-#                                      theme(legend.justification=c(1,1), legend.position=c(1,1))
-#             }
-#         }
-#     }
-# }
-# if (!all(sapply(unlist(p.list), is.null))) {
-#     for (j in seq_along(p21.stitles.ISM)) {
-#         organize_in_grid_with_title(p21.stitles.ISM[[j]], p.list[[j]])
-#         organize_in_grid_with_title(p21.stitles.ISM[[j]], p.list2[[j]])
-#     }
-# }
-# rm(p.list)
-# rm(p.list2)
-
-
-
 
 for (j in seq_along(p21.stitles.ISM)) {
     p.list = vector("list", length(class.files))
@@ -2425,62 +2636,6 @@ p22.stitles.FSM = list(textGrob("Distance to Annotated Transcription Start Site\
                        textGrob("Distance to Annotated Transcription Start Site\nFSM Alternative 3'5' End", gp=gpar(fontface="italic", fontsize=17)),
                        textGrob("Distance to Annotated Transcription Start Site\nFSM Alternative 5' End", gp=gpar(fontface="italic", fontsize=17)),
                        textGrob("Distance to Annotated Transcription Start Site\nFSM Reference Match", gp=gpar(fontface="italic", fontsize=17)))
-# p.list = vector("list", length(p22.stitles.FSM))
-# p.list2 = vector("list", length(p22.stitles.FSM))
-# for (j in seq_along(p22.stitles.FSM)) {
-#     p.list[[j]] = vector("list", length(class.files))
-#     p.list2[[j]] = vector("list", length(class.files))
-# }
-# 
-# for (i in seq_along(class.files)) {
-#     if (nrow(data.FSM.list[[i]]) > 0 && !all(is.na(data.FSM.list[[i]]$within_cage_peak))) {
-#         for(j in 1:length(subcategories.FSM.list[[i]])) {
-#             c <- data.frame(subcategories.FSM.list[[i]][[j]])
-#             if (!(dim(c))[1]==0 & !all(is.na(c$within_CAGE_peak))) {
-#                 diff_max <- max(max(abs(c$diff_to_TSS)), max(abs(c$diff_to_TTS)));
-#                 diff_breaks <- c(-(diff_max+1), seq(-1000, 1000, by = 100), (diff_max+1));
-#                 c$diffTTSCat = cut(-(c$diff_to_TTS), breaks = diff_breaks);
-#                 c$diffTSSCat = cut(-(c$diff_to_TSS), breaks = diff_breaks);
-#                 max_height <- max(table(c$diffTSSCat));
-#                 max_height <- (max_height %/% 10+1) * 10;
-#                 p.list[[j]][[i]] <- ggplot(data=c, aes(x=diffTSSCat)) +
-#                                     geom_bar(fill=myPalette[6], color="black", size=0.3, aes(alpha=eval(parse(text = alpha_TSS.list[[i]])))) +
-#                                     scale_y_continuous(expand = c(0,0), limits = c(0,max_height))+
-#                                     scale_x_discrete(drop=F, labels=breaks_labels) +
-#                                     mytheme + labs(alpha=alpha_TSS_labs.list[[i]]) +
-#                                     ylab("Transcripts, count")+
-#                                     xlab("Distance to annotated Transcription Start Site (TSS), bp")+
-#                                     labs(title=sample.names[[i]],
-#                                          subtitle="Negative values indicate downstream of annotated TSS\n\n") +
-#                                     theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
-#                                     theme(legend.justification=c(1,1), legend.position=c(1,1))
-#                 p.list2[[j]][[i]] <- ggplot(data=c, aes(x=diffTSSCat)) +
-#                                      geom_bar(aes(alpha=eval(parse(text = alpha_TSS.list[[i]])), y = (..count..)/sum(..count..)), fill=myPalette[6], color="black", size=0.3)+
-#                                      scale_y_continuous(breaks=c(0.0,0.25,0.50,0.75,1),
-#                                                                              labels=c("0","25","50","75","100"), expand = c(0,0)) +
-#                                      scale_x_discrete(drop=F, labels=breaks_labels) +
-#                                      mytheme + labs(alpha=alpha_TSS_labs.list[[i]]) +
-#                                      ylab("Transcripts, %")+
-#                                      xlab("Distance to annotated Transcription Start Site (TSS), bp")+
-#                                      labs(title=sample.names[[i]],
-#                                           subtitle="Negative values indicate downstream of annotated TSS\n\n") +
-#                                      theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
-#                                      theme(legend.justification=c(1,1), legend.position=c(1,1))
-#             }
-#         }
-#     }
-# }
-# if (!all(sapply(unlist(p.list), is.null))) {
-#     for (j in seq_along(p22.stitles.FSM)) {
-#         organize_in_grid_with_title(p22.stitles.FSM[[j]], p.list[[j]])
-#         organize_in_grid_with_title(p22.stitles.FSM[[j]], p.list2[[j]])
-#     }
-# }
-# rm(p.list)
-# rm(p.list2)
-
-
-
 
 for (j in seq_along(p22.stitles.FSM)) {
     p.list = vector("list", length(class.files))
@@ -2542,61 +2697,6 @@ p22.stitles.ISM = list(textGrob("Distance to Annotated Transcription Start Site 
                        textGrob("Distance to Annotated Transcription Start Site for ISM\nInternal Fragment" , gp=gpar(fontface="italic", fontsize=17)),
                        textGrob("Distance to Annotated Transcription Start Site for ISM\nA5' Fragment" , gp=gpar(fontface="italic", fontsize=17)),
                        textGrob("Distance to Annotated Transcription Start Site for ISM\nIntron Retention" , gp=gpar(fontface="italic", fontsize=17)))
-# p.list = vector("list", length(p22.stitles.ISM))
-# p.list2 = vector("list", length(p22.stitles.ISM))
-# for (j in seq_along(p22.stitles.ISM)) {
-#     p.list[[j]] = vector("list", length(class.files))
-#     p.list2[[j]] = vector("list", length(class.files))
-# }
-# for (i in seq_along(class.files)) {
-#     if (nrow(data.ISM.list[[i]]) > 0 && !all(is.na(data.FSM.list[[i]]$within_cage_peak))) {
-#         for(j in 1:length(subcategories.ISM.list[[i]])) {
-#             c <- data.frame(subcategories.ISM.list[[i]][[j]])
-#             if (!(dim(c))[1]==0 & !all(is.na(c$within_CAGE_peak))) {
-#                 diff_max <- max(max(abs(c$diff_to_TSS)), max(abs(c$diff_to_TTS)));
-#                 diff_breaks <- c(-(diff_max+1), seq(-5000, 5000, by = 500), diff_max+1)
-#                 c$diffTTSCat = cut(-(c$diff_to_TTS), breaks = diff_breaks);
-#                 c$diffTSSCat = cut(-(c$diff_to_TSS), breaks = diff_breaks);
-#                 max_height <- max(max(table(c$diffTSSCat)), max(table(c$diffTTSCat)));
-#                 max_height <- (max_height %/% 10+1) * 10;
-#                 p.list[[j]][[i]] <- ggplot(data=c, aes(x=diffTSSCat)) +
-#                                     geom_bar(fill=myPalette[6], color="black", size=0.3, aes( alpha= within_CAGE_peak)) +
-#                                     scale_y_continuous(expand = c(0,0), limits = c(0, max_height)) +
-#                                     scale_x_discrete(drop=F, labels=breaks_labels) +
-#                                     mytheme + labs(alpha = "TSS within a CAGE peak") +
-#                                     ylab("Transcripts, count") +
-#                                     xlab("Distance to annotated transcription start site, bp") +
-#                                     labs(title=sample.names[[i]],
-#                                          subtitle="Negative values indicate downstream of annotated TSS\n\n") +
-#                                     theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
-#                                     theme(legend.justification=c(1,1), legend.position=c(1,1))
-#                 p.list2[[j]][[i]] <- ggplot(data=c, aes(x=diffTSSCat)) +
-#                                      geom_bar(aes( alpha= within_CAGE_peak, y = (..count..)/sum(..count..)), fill=myPalette[6], color="black", size=0.3) +
-#                                      scale_y_continuous(breaks=c(0.0,0.25,0.50,0.75,1),
-#                                                         labels=c("0","25","50","75","100"), expand = c(0,0)) +
-#                                      scale_x_discrete(drop=F, labels=breaks_labels) +
-#                                      mytheme + labs(alpha = "TSS within a CAGE peak") +
-#                                      ylab("Transcripts, %") +
-#                                      xlab("Distance to annotated transcription start site, bp") +
-#                                      labs(title=sample.names[[i]],
-#                                           subtitle="Negative values indicate downstream of annotated TSS\n\n") +
-#                                      theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
-#                                      theme(legend.justification=c(1,1), legend.position=c(1,1))
-#             }
-#         }
-#     }
-# }
-# if (!all(sapply(unlist(p.list), is.null))) {
-#     for (j in seq_along(p22.stitles.ISM)) {
-#         organize_in_grid_with_title(p22.stitles.ISM[[j]], p.list[[j]])
-#         organize_in_grid_with_title(p22.stitles.ISM[[j]], p.list2[[j]])
-#     }
-# }
-# rm(p.list)
-# rm(p.list2)
-
-
-
 
 for (j in seq_along(p22.stitles.ISM)) {
     p.list = vector("list", length(class.files))

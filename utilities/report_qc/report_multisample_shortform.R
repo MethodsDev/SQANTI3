@@ -313,8 +313,10 @@ for (i in seq_along(class.files)) {
     # } else {
     #     data.class = read.table(class.file, header=T, as.is=T, sep="\t")
     # }
-    data.class = fread(class.files[i], drop = c("min_sample_cov", "sd_cov", "n_indels", "n_indels_junc", "bite", "ratio_exp", "ORF_length", "CDS_length", "CDS_start", "CDS_end", "CDS_genomic_start", "CDS_genomic_end", "ORF_seq", "dist_to_polyA_site", "within_polyA_site"))
-    
+    # data.class = fread(class.files[i], drop = c("min_sample_cov", "sd_cov", "n_indels", "n_indels_junc", "bite", "ratio_exp", "ORF_length", "CDS_length", "CDS_start", "CDS_end", "CDS_genomic_start", "CDS_genomic_end", "ORF_seq", "dist_to_polyA_site", "within_polyA_site"))
+    data.class = fread(class.files[i], drop = c("associated_transcript", "ref_exons", "diff_to_TSS", "diff_to_TTS", "RTS_stage", "all_canonical", "min_sample_cov", "sd_cov", "FL", "n_indels", "n_indels_junc", "bite", "iso_exp", "gene_exp", "ratio_exp", "FSM_class", "coding", "ORF_length", "CDS_length", "CDS_start", "CDS_end", "CDS_genomic_start", "CDS_genomic_end", "predicted_NMD", "perc_A_downstream_TTS", "seq_A_downstream_TTS", "dist_to_CAGE_peak", "within_CAGE_peak", "dist_to_polyA_site", "within_polyA_site", "polyA_motif", "polyA_dist", "polyA_motif_found", "ORF_seq", "ratio_TSS"))
+    # can drop "coding" and related columns since it's not being output correctly in the table to begin with because --skipORF (old buggy dependency)
+
     rownames(data.class) <- data.class$isoform
     
     # data.class$sample_name = factor(sample.names[i])
@@ -327,14 +329,14 @@ for (i in seq_along(class.files)) {
                                     labels = subc.labels,
                                     levels = subc.levels,
                                     ordered=TRUE)
-    data.class$coding = factor(data.class$coding,
-                               labels = coding.labels,
-                               levels = coding.levels,
-                               ordered=TRUE)
-    legendLabelF1 <- levels(as.factor(data.class$coding));
+    #data.class$coding = factor(data.class$coding,
+    #                           labels = coding.labels,
+    #                           levels = coding.levels,
+    #                           ordered=TRUE)
+    #legendLabelF1 <- levels(as.factor(data.class$coding));
     
     
-    data.class$STM <- apply(data.class,1, STM_function)
+    ## data.class$STM <- apply(data.class,1, STM_function)
     
     # Create a new attribute called "novelGene"
     
@@ -352,11 +354,11 @@ for (i in seq_along(class.files)) {
                                 levels = c("Multi-Exon","Mono-Exon"),
                                 ordered=TRUE)
     
-    canonical.labels=c("Canonical", "Non-canonical")
-    data.class$all_canonical = factor(data.class$all_canonical,
-                                      labels=canonical.labels,
-                                      levels = c("canonical","non_canonical"),
-                                      ordered=TRUE)
+    # canonical.labels=c("Canonical", "Non-canonical")
+    # data.class$all_canonical = factor(data.class$all_canonical,
+    #                                   labels=canonical.labels,
+    #                                   levels = c("canonical","non_canonical"),
+    #                                   ordered=TRUE)
     
     data.class$lenCat <- as.factor(as.integer(data.class$length %/% 1000))
  
@@ -365,7 +367,7 @@ for (i in seq_along(class.files)) {
 }
 
 rm(data.class)
-gc()
+gc(reset=TRUE, full=TRUE)
 
 
 
@@ -678,15 +680,23 @@ for (subcat in unique(results$structural_category)) {
 
 ######################
 
+# df.tmp = bind_rows(mapply(function(dt, sample_name) {
+#     summary_dt = dt %>% 
+#         group_by(structural_category) %>% 
+#         summarize(sample = sample_name, 
+#                   n = n(),
+#                   coding_prop = sum(coding == "Coding")) %>% 
+#         mutate(coding_prop = coding_prop / sum(n) * 100,
+#                n = n / sum(n) * 100
+#         )
+#     return(summary_dt)
+# }, data.class.list, sample.names, SIMPLIFY = FALSE))
+
 df.tmp = bind_rows(mapply(function(dt, sample_name) {
     summary_dt = dt %>% 
         group_by(structural_category) %>% 
         summarize(sample = sample_name, 
-                  n = n(),
-                  coding_prop = sum(coding == "Coding")) %>% 
-        mutate(coding_prop = coding_prop / sum(n) * 100,
-               n = n / sum(n) * 100
-        )
+                  n = n())
     return(summary_dt)
 }, data.class.list, sample.names, SIMPLIFY = FALSE))
 
@@ -695,7 +705,7 @@ p.tmp = ggplot(data = df.tmp, aes(x = structural_category, group = sample)) +
     # Full height as lower alpha
     geom_bar(aes(y = n, fill = structural_category, alpha = 0.3), stat = 'identity', position = "dodge", width = 0.7, color = "black", size = 0.3) +
     # Overlap the coding proportion with full alpha
-    geom_bar(aes(y = coding_prop, fill = structural_category, alpha = 1), stat = 'identity', position = "dodge", width = 0.7, color = "black", size = 0.3) +
+    # geom_bar(aes(y = coding_prop, fill = structural_category, alpha = 1), stat = 'identity', position = "dodge", width = 0.7, color = "black", size = 0.3) +
     geom_text(aes(y = n, label = sample), position = position_dodge(width = 0.7), angle = 90, hjust = -0.1) +
     scale_x_discrete(drop = FALSE) +
     scale_fill_manual(values = cat.palette) +
@@ -713,7 +723,7 @@ p.tmp2 = ggplot(data = df.tmp, aes(x = structural_category, group = sample)) +
     # Full height as lower alpha
     geom_bar(aes(y = n, fill = sample, alpha = 0.3), stat = 'identity', position = "dodge", width = 0.7, color = "black", size = 0.3) +
     # Overlap the coding proportion with full alpha
-    geom_bar(aes(y = coding_prop, fill = sample, alpha = 1), stat = 'identity', position = "dodge", width = 0.7, color = "black", size = 0.3) +
+    # geom_bar(aes(y = coding_prop, fill = sample, alpha = 1), stat = 'identity', position = "dodge", width = 0.7, color = "black", size = 0.3) +
     geom_text(aes(y = n, label = sample), position = position_dodge(width = 0.7), angle = 90, hjust = -0.1) +
     scale_x_discrete(drop = FALSE) +
     scale_alpha_identity() +
@@ -736,23 +746,32 @@ rm(df.tmp)
 
 for (current_category in c("FSM", "ISM", "NIC", "NNC", "Genic\nGenomic", "Antisense", "Fusion", "Intergenic", "Genic\nIntron")) {
     df.tmp = bind_rows( mapply(function(dt, sample_name) {
-        subset_dt <- dt[(structural_category == current_category & exons > 1), .(subcategory, coding)]
+        subset_dt <- dt[(structural_category == current_category & exons > 1), .(subcategory)]
         summary_dt = subset_dt %>% 
             group_by(subcategory) %>% 
             summarize(sample = sample_name,
-                      n = n(),
-                      coding_prop = sum(coding == "Coding")) %>% 
-            mutate(coding_prop = coding_prop / sum(n) * 100,
-                   n = n / sum(n) * 100)
+                      n = n())
         return(summary_dt)
     }, data.class.list, sample.names, SIMPLIFY = FALSE))
+
+#        df.tmp = bind_rows( mapply(function(dt, sample_name) {
+#        subset_dt <- dt[(structural_category == current_category & exons > 1), .(subcategory, coding)]
+#        summary_dt = subset_dt %>% 
+#            group_by(subcategory) %>% 
+#            summarize(sample = sample_name,
+#                      n = n(),
+#                      coding_prop = sum(coding == "Coding")) %>% 
+#            mutate(coding_prop = coding_prop / sum(n) * 100,
+#                   n = n / sum(n) * 100)
+#        return(summary_dt)
+#    }, data.class.list, sample.names, SIMPLIFY = FALSE))
     
     if (dim(df.tmp)[1] > 1) {
         p.tmp <- ggplot(data=df.tmp, aes(x = subcategory, group = sample)) +
             # Full height as lower alpha
             geom_bar(aes(y = n, fill = subcategory, alpha = 0.3), stat = 'identity', position = "dodge", width = 0.7, color = "black", size = 0.3) +
             # Overlap the coding proportion with full alpha
-            geom_bar(aes(y = coding_prop, fill = subcategory, alpha = 1), stat = 'identity', position = "dodge", width = 0.7, color = "black", size = 0.3) +
+            # geom_bar(aes(y = coding_prop, fill = subcategory, alpha = 1), stat = 'identity', position = "dodge", width = 0.7, color = "black", size = 0.3) +
             geom_text(aes(y=n, label=sample, angle=90), hjust=-0.1, position=position_dodge(width=0.7)) +
             scale_x_discrete(drop=TRUE) +
             scale_alpha_identity() +
@@ -769,7 +788,7 @@ for (current_category in c("FSM", "ISM", "NIC", "NNC", "Genic\nGenomic", "Antise
         # maybe need to adjust where the legend is shown
         p.tmp2 <- ggplot(data=df.tmp, aes(x = subcategory, groupe = sample)) +
             geom_bar(aes(y = n, fill = sample, alpha = 0.3), stat="identity", color="black", size=0.3, width=0.7, position="dodge") +
-            geom_bar(aes(y = coding_prop, fill = sample, alpha = 1), stat = 'identity', position = "dodge", width = 0.7, color = "black", size = 0.3) +
+            # geom_bar(aes(y = coding_prop, fill = sample, alpha = 1), stat = 'identity', position = "dodge", width = 0.7, color = "black", size = 0.3) +
             scale_x_discrete(drop=TRUE) +
             scale_alpha_identity() +
             # scale_alpha_manual(values=c(1,0.3), name = "Coding prediction", labels = legendLabelF1)+

@@ -305,7 +305,7 @@ calculate_layout(length(class.files))
 data.class.list = vector("list", length(class.files))
 
 for (i in seq_along(class.files)) {
-    
+    print(paste0(Sys.time(), " starting to read input file ", class.file[i]))
     #class.file = class.files[i]
     # if (tools::file_ext(class.file) == "gz") {
     #     data.class <- read.table(connection <- gzfile(class.file, 'rt'), header=T, as.is=T, sep="\t")
@@ -364,6 +364,7 @@ for (i in seq_along(class.files)) {
  
     ################################
     data.class.list[[i]] = data.class
+    print(paste0(Sys.time(), " done reading ", class.file[i]))
 }
 
 rm(data.class)
@@ -407,7 +408,7 @@ compute_bins <- function(data_tbl, sample_name, bin_width = 100) {
 
 
 
-
+print(paste0(Sys.time(), " starting to generate transcript length distribution plots"))
 binned_data_list <- map2(data.class.list, sample.names, compute_bins)
 combined_binned_data = bind_rows(binned_data_list)
 rm(binned_data_list)
@@ -442,14 +443,15 @@ grid.arrange(p.tmp, p.tmp2, ncol=2)
 rm(p.tmp)
 rm(p.tmp2)
 rm(combined_binned_data)
-
+gc(reset=TRUE, full=TRUE)
+print(paste0(Sys.time(), " done generating transcript length distribution plots"))
 
 
 
 
 
 ### testing
-
+print(paste0(Sys.time(), " starting to calculate x_limit"))
 full_data_tbl = NULL
 x_limit2 = 0
 for (data_tbl in data.class.list) {
@@ -470,10 +472,10 @@ for (data_tbl in data.class.list) {
     # full_data_tbl = rbind(full_data_tbl, data_tbl_tmp)
 }
 rm(data_tbl_tmp)
-gc()
+gc(reset=TRUE, full=TRUE)
 # x_limit2 = quantile(full_data_tbl$length, 0.99)
 x_limit = x_limit2
-
+print(paste0(Sys.time(), " done calculating x_limit"))
 
 
 compute_bins <- function(data_tbl, sample_name, bin_width = 100) {
@@ -506,7 +508,7 @@ compute_bins <- function(data_tbl, sample_name, bin_width = 100) {
     
     return(binned_data)
 }
-
+print(paste0(Sys.time(), " starting to generate transcript length distribution plots part2"))
 binned_data_list <- map2(data.class.list, sample.names, compute_bins)
 combined_binned_data = bind_rows(binned_data_list)
 rm(binned_data_list)
@@ -541,6 +543,8 @@ grid.arrange(p.tmp, p.tmp2, ncol=2)
 rm(p.tmp)
 rm(p.tmp2)
 rm(combined_binned_data)
+gc(reset=TRUE, full=TRUE)
+print(paste0(Sys.time(), " done generating transcript length distribution plots part2"))
 
 
 compute_bins <- function(data_tbl, sample_name, bin_width = 100) {
@@ -583,6 +587,8 @@ compute_bins <- function(data_tbl, sample_name, bin_width = 100) {
     return(binned_data)
 }
 
+print(paste0(Sys.time(), " starting to generate transcript length distribution plots part3"))
+
 binned_data_list <- map2(data.class.list, sample.names, compute_bins)
 combined_binned_data = bind_rows(binned_data_list)
 rm(binned_data_list)
@@ -617,12 +623,13 @@ grid.arrange(p.tmp, p.tmp2, ncol=2)
 rm(p.tmp)
 rm(p.tmp2)
 rm(combined_binned_data)
+gc(reset=TRUE, full=TRUE)
+print(paste0(Sys.time(), " done generating transcript length distribution plots part3"))
 
 for (i in seq_along(data.class.list)) {
     data.class.list[[i]] <- data.class.list[[i]] %>%
         filter(!grepl("_sup\\d+|_sec\\d+", isoform))
 }
-
 ### end of testing
 
 
@@ -658,7 +665,7 @@ compute_bins <- function(data_tbl, sample_name, bin_width = 100) {
     
     return(binned_data)
 }
-
+print(paste0(Sys.time(), " starting to generate normalized transcript length distribution plots"))
 results <- bind_rows(map2(data.class.list, sample.names, compute_bins))
 
 
@@ -676,7 +683,13 @@ for (subcat in unique(results$structural_category)) {
     p.tmp4 = p.tmp + coord_cartesian(xlim = c(0, x_limit), ylim = c(0, y_limit))
     grid.arrange(p.tmp, p.tmp2, p.tmp3, p.tmp4, ncol=2)
 }
-
+rm(results)
+rm(p.tmp)
+rm(p.tmp2)
+rm(p.tmp3)
+rm(p.tmp4)
+gc(reset=TRUE, full=TRUE)
+print(paste0(Sys.time(), " done generating normalized transcript length distribution plots"))
 
 ######################
 
@@ -691,7 +704,7 @@ for (subcat in unique(results$structural_category)) {
 #         )
 #     return(summary_dt)
 # }, data.class.list, sample.names, SIMPLIFY = FALSE))
-
+print(paste0(Sys.time(), " starting to generate structural_category plots"))
 df.tmp = bind_rows(mapply(function(dt, sample_name) {
     summary_dt = dt %>% 
         group_by(structural_category) %>% 
@@ -740,10 +753,12 @@ grid.arrange(p.tmp, p.tmp2, ncol=2)
 rm(p.tmp)
 rm(p.tmp2)
 rm(df.tmp)
-
+gc(reset=TRUE, full=TRUE)
+print(paste0(Sys.time(), " done generating structural_category plots"))
 
 #########################
 
+print(paste0(Sys.time(), " starting to generate subcategory per category plots"))
 for (current_category in c("FSM", "ISM", "NIC", "NNC", "Genic\nGenomic", "Antisense", "Fusion", "Intergenic", "Genic\nIntron")) {
     df.tmp = bind_rows( mapply(function(dt, sample_name) {
         subset_dt <- dt[(structural_category == current_category & exons > 1), .(subcategory)]
@@ -805,8 +820,9 @@ for (current_category in c("FSM", "ISM", "NIC", "NNC", "Genic\nGenomic", "Antise
         rm(p.tmp2)
     }
     rm(df.tmp)
+    gc(reset=TRUE, full=TRUE)
 }
-
+print(paste0(Sys.time(), " done generating subcategory per category plots"))
 
 
 dev.off()

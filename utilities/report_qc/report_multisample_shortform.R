@@ -305,7 +305,7 @@ calculate_layout(length(class.files))
 data.class.list = vector("list", length(class.files))
 
 for (i in seq_along(class.files)) {
-    print(paste0(Sys.time(), " starting to read input file ", class.file[i]))
+    print(paste0(Sys.time(), " starting to read input file ", class.files[i]))
     #class.file = class.files[i]
     # if (tools::file_ext(class.file) == "gz") {
     #     data.class <- read.table(connection <- gzfile(class.file, 'rt'), header=T, as.is=T, sep="\t")
@@ -364,7 +364,7 @@ for (i in seq_along(class.files)) {
  
     ################################
     data.class.list[[i]] = data.class
-    print(paste0(Sys.time(), " done reading ", class.file[i]))
+    print(paste0(Sys.time(), " done reading ", class.files[i]))
 }
 
 rm(data.class)

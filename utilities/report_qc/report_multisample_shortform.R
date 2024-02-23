@@ -709,7 +709,10 @@ df.tmp = bind_rows(mapply(function(dt, sample_name) {
     summary_dt = dt %>% 
         group_by(structural_category) %>% 
         summarize(sample = sample_name, 
-                  n = n())
+                  n = n()) %>%
+        mutate(total = sum(n)) %>%
+        mutate(n = (n / total) * 100) %>%
+        select(-total)
     return(summary_dt)
 }, data.class.list, sample.names, SIMPLIFY = FALSE))
 
@@ -765,7 +768,10 @@ for (current_category in c("FSM", "ISM", "NIC", "NNC", "Genic\nGenomic", "Antise
         summary_dt = subset_dt %>% 
             group_by(subcategory) %>% 
             summarize(sample = sample_name,
-                      n = n())
+                      n = n()) %>%
+            mutate(total = sum(n)) %>%
+            mutate(n = (n / total) * 100) %>%
+            select(-total)
         return(summary_dt)
     }, data.class.list, sample.names, SIMPLIFY = FALSE))
 

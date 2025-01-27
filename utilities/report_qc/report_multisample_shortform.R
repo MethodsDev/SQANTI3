@@ -246,7 +246,7 @@ subcat.palette = c("Alternative 3'end"='#02314d',
 cat.palette = c("FSM"="#6BAED6", "ISM"="#FC8D59", "NIC"="#78C679", 
                 "NNC"="#EE6A50", "Genic\nGenomic"="#969696", "Antisense"="#66C2A4", "Fusion"="goldenrod1",
                 "Intergenic" = "darksalmon", "Genic\nIntron"="#41B6C4")
-if length(sample.names <= 12) {
+if (length(sample.names <= 12)) {
     sample.palette = brewer.pal(length(sample.names), "Set3")
 } else {
     sample.palette = c("#B30000", "#FF0000", "#FF6666",

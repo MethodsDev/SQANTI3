@@ -246,7 +246,22 @@ subcat.palette = c("Alternative 3'end"='#02314d',
 cat.palette = c("FSM"="#6BAED6", "ISM"="#FC8D59", "NIC"="#78C679", 
                 "NNC"="#EE6A50", "Genic\nGenomic"="#969696", "Antisense"="#66C2A4", "Fusion"="goldenrod1",
                 "Intergenic" = "darksalmon", "Genic\nIntron"="#41B6C4")
-sample.palette = brewer.pal(length(sample.names), "Set3")
+if length(sample.names <= 12) {
+    sample.palette = brewer.pal(length(sample.names), "Set3")
+} else {
+    sample.palette = c("#B30000", "#FF0000", "#FF6666",
+                      "#B35500", "#FF8000", "#FFB366",
+                      "#B3B300", "#FFFF00", "#DDDD77",
+                      "#55B300", "#80FF00", "#B3FF66",
+                      "#00B300", "#777711", "#1b7837",
+                      "#A3CB38", "#00FF80", "#66FFB3",
+                      "#006266", "#77CCCC", "#85929E",
+                      "#0055B3", "#1c9099", "#66B3FF",
+                      "#1B1464", "#0000FF", "#6666FF",
+                      "#5500B3", "#8000FF", "#B366FF",
+                      "#B300B3", "#FF00FF", "#FDA7DF",
+                      "#771122", "#FF0080", "#FF66B3")[1:length(sample.names)]
+}
 names(sample.palette) = sample.names
 
 
